@@ -26,7 +26,7 @@ def nostdout():
     yield
     sys.stdout = save_stdout
 
-# query_file_path = '/Users/pma/tmp/Lena_metabo_local/FBMN_metabo_lena/spectra/fbmn_lena_metabo_specs_ms.mgf'
+# query_file_path = '/Users/pma/tmp/bafu_ecometabo/FBMN_bafu_ecometabo_pos/spectra/specs_ms.mgf'
 # db_file_path = '/Users/pma/tmp/ISDB_DNP_msmatchready.mgf'
 # parent_mz_tol = 0.01
 # msms_mz_tol = 0.01
@@ -85,7 +85,10 @@ print('They will be matched against the %s spectra of the spectral library.' % l
 # len(spectrums_query)
 # len(spectrums_db)
 
-# spectrums_query[0].metadata
+spectrums_query[4198].metadata
+
+spectrums_query[345].metadata
+
 
 # spectrums_db[0].metadata
 
@@ -155,8 +158,8 @@ for (x,y) in zip(idx_row,idx_col):
         if (msms_score>float(min_cos)) & (n_matches>int(min_peaks)):
             data.append({'msms_score':msms_score,
                          'matched_peaks':n_matches,
-                         'experiment_id':x,
-                         'reference_id':y,
+                         'feature_id':x + 1,
+                         'reference_id':y + 1,
                          'inchikey': spectrums_db_cleaned[y].get("inchikey")})
 df = pd.DataFrame(data)
 
