@@ -4,7 +4,7 @@ A script based on the matchms library allowing to calculate spectral similarity 
 
 ## Requirements
 
-You nedd to install matchms and activate the matchms environment.
+You need to install matchms and activate the matchms environment.
 See instruction here https://github.com/matchms/matchms
 
 ## Running the spectral matching 
