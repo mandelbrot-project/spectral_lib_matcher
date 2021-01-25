@@ -85,9 +85,9 @@ print('They will be matched against the %s spectra of the spectral library.' % l
 # len(spectrums_query)
 # len(spectrums_db)
 
-spectrums_query[4198].metadata
+# spectrums_query[4198].metadata
 
-spectrums_query[345].metadata
+# spectrums_query[345].metadata
 
 
 # spectrums_db[0].metadata
