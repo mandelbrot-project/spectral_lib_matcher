@@ -84,17 +84,17 @@ df_meta_bio = df_meta_bio.append(qc_df)
 df_meta_bio = df_meta_bio.append(blank_df)
 
 df_meta_bio.ms_injection_date = df_meta_bio.ms_injection_date.fillna(df_meta_bio.sample_plate_id.map(plate_date_dict))
-df_meta_bio.to_csv("../../Desktop/VGF_clean_metadata_with_bio_with_qc_and_blanks.tsv", sep='\t', index=False)
+df_meta_bio.to_csv("//farma-ad2/FARMA-Network/Recherche/COMMON FASIE-FATHO/PF_project/201109_VGF_pos_new_treatment/VGF_individual_files_pos/VGF_clean_metadata_with_bio_with_qc_and_blanks.tsv", sep='\t', index=False)
 
 
-sample_dir = "C:/Users/gaudrya.Farma/Desktop/VGF_individual_files_pos"
+sample_dir = "//farma-ad2/FARMA-Network/Recherche/COMMON FASIE-FATHO/PF_project/201109_VGF_pos_new_treatment/VGF_individual_files_pos/"
 samples_dir = [x[0] for x in os.walk(sample_dir)]
 samples_dir.remove(sample_dir)
 
 for sample_dir in samples_dir:
-        os.chdir(sample_dir)
-        sample = sample_dir.split("\\",1)[1]
-        df_meta_bio_sub = df_meta_bio[df_meta_bio['sample_id']==sample]
-        metadata = sample + '_metadata.tsv'
-        df_meta_bio_sub.to_csv(metadata, sep='\t', index=False)
+    os.chdir(sample_dir)
+    sample = sample_dir.split(sample_dir,1)[1]
+    df_meta_bio_sub = df_meta_bio[df_meta_bio['sample_id']==sample]
+    metadata = sample + '_metadata.tsv'
+    df_meta_bio_sub.to_csv(metadata, sep='\t', index=False)
 
