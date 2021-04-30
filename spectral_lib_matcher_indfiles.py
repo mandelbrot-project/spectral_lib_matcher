@@ -247,13 +247,22 @@ for root, dirs, files in os.walk(path_to_mgf):
             nodes['component_id'] = nodes['component_id'].fillna(-1)
             nodes['component_id'] = nodes['component_id'].astype(int)
 
-            # we merge edge table and individual precursor mz table
+            self_nodes_list = nodes[nodes['component_id'] == -1].feature_id.to_list()
 
+            # we merge edge table and individual precursor mz table
             edges = pd.merge(precursor_mz_df, df, how = 'left', on='feature_id')
-            edges.reference_id.fillna(edges.feature_id, inplace=True)
+
+            #reference_id = edges.reference_id.dropna().to_list()
+
             edges.drop(['precursor_mz'], axis = 1, inplace = True)
             edges['matched_peaks'] = edges['matched_peaks'].astype('Int32')
-            edges['reference_id'] = edges['reference_id'].astype(int)
+            edges['reference_id'] = edges['reference_id'].astype('Int32')
+
+            edges['reference_id'] = np.where(((np.isnan(edges.reference_id)) & (edges.feature_id.isin(self_nodes_list))), edges.feature_id, edges.reference_id)
+
+            #edges.reference_id.fillna(edges.feature_id, inplace=True)
+            
+
 
 
             nodes.to_csv(root + '/' + base + '_mn_nodes.txt', sep = '\t', index = False)
