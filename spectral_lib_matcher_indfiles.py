@@ -230,11 +230,35 @@ for root, dirs, files in os.walk(path_to_mgf):
             comp = pd.DataFrame.from_dict(attr, orient = 'index')
 
             comp.reset_index(inplace = True)
-            comp.rename(columns={'index': 'feature_id'}, inplace=True)
+            comp.rename(columns={'index': 'feature_id', 'component' : 'component_id'}, inplace=True)
+            comp['component_id'] = comp['component_id'] + 1
 
-            comp.to_csv(root + '/' + base + '_mn_nodes.txt', sep = '\t', index = False)
+            # we also want to have the single nodes
 
-            df.to_csv(root + '/' + base + '_mn_edges.txt', sep = '\t', index = False)
+            precursor_mz_list = [s.get('precursor_mz') for s in spectrums_query]
+            precursor_mz_df = pd.DataFrame(precursor_mz_list)
+            precursor_mz_df.reset_index(inplace = True)
+            precursor_mz_df.rename(columns={'index': 'feature_id', 0 : 'precursor_mz'}, inplace=True)
+            precursor_mz_df['feature_id'] = precursor_mz_df['feature_id'] + 1
+
+            # we merge component ids and individual precursor mz table
+
+            nodes = pd.merge(precursor_mz_df, comp, how = 'left', on='feature_id')
+            nodes['component_id'] = nodes['component_id'].fillna(-1)
+            nodes['component_id'] = nodes['component_id'].astype(int)
+
+            # we merge edge table and individual precursor mz table
+
+            edges = pd.merge(precursor_mz_df, df, how = 'left', on='feature_id')
+            edges.reference_id.fillna(edges.feature_id, inplace=True)
+            edges.drop(['precursor_mz'], axis = 1, inplace = True)
+            edges['matched_peaks'] = edges['matched_peaks'].astype('Int32')
+            edges['reference_id'] = edges['reference_id'].astype(int)
+
+
+            nodes.to_csv(root + '/' + base + '_mn_nodes.txt', sep = '\t', index = False)
+
+            edges.to_csv(root + '/' + base + '_mn_edges.txt', sep = '\t', index = False)
 
             print('Proceeding to the spectral match for ' + base)
             #%%time
@@ -258,7 +282,6 @@ for root, dirs, files in os.walk(path_to_mgf):
                                     'reference_id':y + 1,
                                     'inchikey': spectrums_db_cleaned[y].get("inchikey")})
             df = pd.DataFrame(data)
-
 
             df.to_csv(root + '/' + base + '_results.txt', sep = '\t')
 
