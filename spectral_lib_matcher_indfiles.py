@@ -5,6 +5,8 @@ import sys
 import time
 import numpy as np
 import pandas as pd
+import networkx as nx
+
 
 # loading the files
 
@@ -34,6 +36,16 @@ def nostdout():
 # min_peaks = 6
 # output_file_path = '/Users/pma/tmp/lena_matched.out'
 
+# path_to_mgf = '/Users/pma/tmp/vgf_ind_files/'
+# db_file_path = '/Users/pma/tmp/ISDB_DNP_msmatchready.mgf'
+# parent_mz_tol = 0.01
+# msms_mz_tol = 0.01
+# min_cos = 0.2
+# min_peaks = 6
+# mn_parent_mz_tol = 2000
+# mn_msms_mz_tol = 0.01
+# mn_min_cos = 0.6
+# mn_min_peaks = 6
 
 # defining the command line arguments
 try:
@@ -50,16 +62,24 @@ try:
     #output_file_path = sys.argv[11]
     #output_file_path_mn = sys.argv[12]
 
-    # print('Parsing spectral file '
-    #       + path_to_mgf
-    #       + ' against spectral database: '
-    #       + db_file_path
-    #       + '.\n This spectral matching is done with: \n' 
-    #       + '   - a parent mass tolerance of ' + str(parent_mz_tol) + '\n'
-    #       + '   - a msms mass tolerance of ' + str(msms_mz_tol) + '\n'
-    #       + '   - a minimal cosine of ' + str(min_cos) + '\n'
-    #       + '   - a minimal matching peaks number of ' + str(min_peaks) + '\n'
-    #       + 'Results will be outputed in ' + output_file_path)
+    print('Parsing spectral file '
+          + path_to_mgf
+          + ' against spectral database: '
+          + db_file_path
+          + '.\n'
+          +'\n'
+          + ' This spectral matching is done with: \n' 
+          + '   - a parent mass tolerance of ' + str(parent_mz_tol) + ' Da.' + '\n'
+          + '   - a msms mass tolerance of ' + str(msms_mz_tol) + ' Da.' + '\n'
+          + '   - a minimal cosine of ' + str(min_cos) + '\n'
+          + '   - a minimal matching peaks number of ' + str(min_peaks) + '\n'
+          + '\n For each spectra a MN calculation is done with: \n' 
+          + '   - a parent mass tolerance of ' + str(mn_parent_mz_tol) + ' Da.' + '\n'
+          + '   - a msms mass tolerance of ' + str(mn_msms_mz_tol) + ' Da.' + '\n'
+          + '   - a minimal cosine of ' + str(mn_min_cos) + '\n'
+          + '   - a minimal matching peaks number of ' + str(mn_min_peaks) + '\n'
+          +'\n'
+          + 'Results will be outputed in each spectral file respective subfolders in ' + path_to_mgf  + '\n')  
 except:
     print(
         '''Please add input and output file path as first and second argument, InChI column header as third argument and finally the number of cpus you want to use.
@@ -116,6 +136,8 @@ with nostdout():
     spectrums_db_cleaned = [metadata_processing(s) for s in spectrums_db]
     # spectrums_db_cleaned = [peak_processing(s) for s in spectrums_db_cleaned]
 
+print('A total of %s clean spectra were found in the spectral library.' % len(spectrums_db_cleaned))
+
 #save_as_mgf(spectrums_db_cleaned, '/Users/pma/tmp/ISDB_DNP_msmatchready.mgf')
 
 
@@ -130,16 +152,17 @@ start_time = time.time()
 for root, dirs, files in os.walk(path_to_mgf):
     for file in files:
         if file.endswith(".mgf"):
-            print(os.path.join(root, file))
-            
 
+            base = os.path.basename(root)
+
+            print('Treating file ' + base)
+            
 
             spectrums_query = list(load_from_mgf(os.path.join(root, file)))
 
 
             print('%s spectra were found in the query file.' % len(spectrums_query))
 
-            print('They will be matched against the %s spectra of the spectral library.' % len(spectrums_db))
 
             # len(spectrums_query)
             # len(spectrums_db)
@@ -160,7 +183,7 @@ for root, dirs, files in os.walk(path_to_mgf):
             
 
 
-            print('Proceeding to the MN calc ...')
+            print('Proceeding to the MN calc for ' + base)
             #%%time
             from matchms.similarity import PrecursorMzMatch
             from matchms import calculate_scores
@@ -181,11 +204,39 @@ for root, dirs, files in os.walk(path_to_mgf):
                                     'feature_id':x + 1,
                                     'reference_id':y + 1})
             df = pd.DataFrame(data)
+            
+
+            # calculating component index in the g
+
+            G = nx.from_pandas_edgelist(df, 'feature_id', 'reference_id')
+
+            # nx.connected_components(G)
+            # [len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]
+            # [list(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]
+            # largest_cc = max(nx.connected_components(G), key=len)
+
+            def connected_component_subgraphs(G):
+                for c in nx.connected_components(G):
+                    yield G.subgraph(c)
+
+            components = connected_component_subgraphs(G)
+
+            comp_dict = {idx: comp.nodes() for idx, comp in enumerate(components)}
+            # print(comp_dict)
 
 
-            df.to_csv(os.path.splitext(root)[0] + '_mn.txt', sep = '\t')
+            attr = {n: {'component_id' : comp_id} for comp_id, nodes in comp_dict.items() for n in nodes}
 
-            print('Proceeding to the spectral match ...')
+            comp = pd.DataFrame.from_dict(attr, orient = 'index')
+
+            comp.reset_index(inplace = True)
+            comp.rename(columns={'index': 'feature_id'}, inplace=True)
+
+            comp.to_csv(root + '/' + base + '_mn_nodes.txt', sep = '\t', index = False)
+
+            df.to_csv(root + '/' + base + '_mn_edges.txt', sep = '\t', index = False)
+
+            print('Proceeding to the spectral match for ' + base)
             #%%time
             from matchms.similarity import PrecursorMzMatch
             from matchms import calculate_scores
@@ -209,7 +260,7 @@ for root, dirs, files in os.walk(path_to_mgf):
             df = pd.DataFrame(data)
 
 
-            df.to_csv(os.path.splitext(root)[0] + '_results.txt', sep = '\t')
+            df.to_csv(root + '/' + base + '_results.txt', sep = '\t')
 
 print('Finished in %s seconds.' % (time.time() - start_time))
 #print('You can check your results in here %s' % output_file_path)
