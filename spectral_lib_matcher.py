@@ -63,6 +63,7 @@ except:
 
 
 # python spectral_lib_matcher.py /Users/pma/Dropbox/Research_UNIGE/Projets/Ongoing/MEMO/GNPS_output_GNPS_3/spectra/specs_ms.mgf /Users/pma/tmp/ISDB_DNP_msmatchready.mgf 0.01 0.01 0.2 6 /Users/pma/Dropbox/Research_UNIGE/Projets/Ongoing/MEMO/GNPS_output_GNPS_3/ISDB_results.out
+# python spectral_lib_matcher.py /Users/pma/Dropbox/Research_UNIGE/git_repos/pf_project/data/spectral/VGF_20plates_MN_spectra.mgf /Users/pma/tmp/ISDB_DNP_msmatchready.mgf 0.01 0.01 0.2 6 /Users/pma/Dropbox/Research_UNIGE/git_repos/pf_project/data/spectral/VGF_20plates_MN_ISDB_out.out
 # timer is started
 start_time = time.time()
 

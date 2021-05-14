@@ -151,7 +151,7 @@ start_time = time.time()
 
 for root, dirs, files in os.walk(path_to_mgf):
     for file in files:
-        if file.endswith(".mgf"):
+        if file.endswith("ms2_pos.mgf"):
 
             base = os.path.basename(root)
 
