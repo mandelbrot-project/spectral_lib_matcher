@@ -112,7 +112,7 @@ for (x, y) in zip(idx_row, idx_col):
                          'matched_peaks': n_matches,
                          'feature_id': x + 1,
                          'reference_id': y + 1,
-                         'inchikey': spectra_db[y].get("inchikey")})
+                         'inchikey': spectra_db[y].get("name")})
 df = pd.DataFrame(data)
 
 df.to_csv(args.o[0], sep='\t')
