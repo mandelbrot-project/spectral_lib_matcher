@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import sys
 import time
+import tqdm
+
 
 from matchms.importing import load_from_mgf
 
@@ -14,6 +16,12 @@ from matchms import calculate_scores
 from matchms.similarity import CosineGreedy
 
 from nostdout import nostdout
+
+from tqdm.contrib import tzip
+from time import sleep
+
+
+
 
 DEFAULT_MS_TOLERANCE = 0.01
 DEFAULT_MSMS_TOLERANCE = 0.01
@@ -104,7 +112,11 @@ indices = np.where(np.asarray(scores.scores))
 idx_row, idx_col = indices
 cosine_greedy = CosineGreedy(tolerance=args.msms_mz_tolerance)
 data = []
-for (x, y) in zip(idx_row, idx_col):
+
+# for (x, y) in tzip(idx_row, idx_col):
+    # sleep(0.1)
+# for (x, y) in zip(idx_row, idx_col):
+for (x, y) in tzip(idx_row, idx_col):
     if x < y:
         msms_score, n_matches = cosine_greedy.pair(spectra_query[x], spectra_db[y])[()]
         if (msms_score > args.min_cosine_score) & (n_matches > args.min_peaks):
