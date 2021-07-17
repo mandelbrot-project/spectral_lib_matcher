@@ -1,0 +1,15 @@
+name: Build docker image and run tests in it
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build image
+        run: docker build -t spectrallibmatcher .
+      - name: Run tests
+        run: docker run -v $PWD:/app --rm spectrallibmatcher bash --login ./scripts/run_tests.sh

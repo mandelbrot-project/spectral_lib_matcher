@@ -4,8 +4,25 @@ A script based on the matchms library allowing to calculate spectral similarity 
 
 ## Requirements
 
-You need to install matchms and activate the matchms environment.
-See instruction here https://github.com/matchms/matchms
+### With conda
+
+You can create a conda environment with environment.yml.
+
+### With docker.
+
+```shell
+docker build -t spectrallibmatcher .
+```
+
+```shell
+docker run -it --rm -v $PWD:/app spectrallibmatcher bash
+```
+
+Run the tests to check that everything works:
+
+```shell
+docker run -it --rm -v $PWD:/app spectrallibmatcher bash --login scripts/run_tests.sh 
+```
 
 ## Running the spectral matching 
 
@@ -21,8 +38,7 @@ The spectral_lib_matcher.py script takes 7 arguments.
 
 Command line example
 
-`python spectral_lib_matcher.py path/to/your/query_spectra.mgf path/to/your/database_spectra.mgf 0.01 0.01 0.2 6 path/to/your/results_file.tsv`
-
+`python src/mandelbrot_spectral_lib_matcher/processor.py path/to/your/query_spectra.mgf path/to/your/database_spectra.mgf 0.01 0.01 0.2 6 path/to/your/results_file.tsv`
 
 ## More on matchms
 
