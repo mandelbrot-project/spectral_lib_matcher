@@ -1,27 +1,26 @@
 import argparse
-import numpy as np
-import pandas as pd
 import sys
 import time
-import tqdm
 
+import numpy as np
+import pandas as pd
 
-from matchms.importing import load_from_mgf
+from matchms import calculate_scores
 
+from matchms.exporting import save_as_mgf
+
+from matchms.filtering import add_precursor_mz
 from matchms.filtering import default_filters
 from matchms.filtering import normalize_intensities
 
-from matchms.similarity import PrecursorMzMatch
-from matchms import calculate_scores
-from matchms.similarity import CosineGreedy
+from matchms.importing import load_from_mgf
 
-from nostdout import nostdout
+from matchms.similarity import CosineGreedy
+from matchms.similarity import PrecursorMzMatch
 
 from tqdm.contrib import tzip
-from time import sleep
 
-
-
+from nostdout import nostdout
 
 DEFAULT_MS_TOLERANCE = 0.01
 DEFAULT_MSMS_TOLERANCE = 0.01
@@ -47,17 +46,44 @@ parser.add_argument("--min_cosine_score", metavar='-c', type=float, nargs='?',
 parser.add_argument("--min_peaks", metavar='-k', type=int, nargs='?',
                     help=f"minimal number of peaks to consider (default {DEFAULT_MIN_PEAKS})",
                     default=DEFAULT_MIN_PEAKS)
+parser.add_argument("-c", action='store_true',
+                    help="aditional cleaning step on the database file")
 parser.add_argument("-v", action='store_true',
                     help="print additional details to stdout")
 
 args = parser.parse_args()
 
-verbose = args.v
+cleaning = args.c
 
+verbose = args.v
 
 def log(string: str):
     if verbose:
         print(string)
+
+
+def metadata_processing(spectrum):
+    spectrum = default_filters(spectrum)
+    return spectrum
+
+  
+def minimal_processing(spectrum):
+    spectrum = default_filters(spectrum)
+    return spectrum
+  
+  
+def peak_processing(spectrum):
+    spectrum = default_filters(spectrum)
+    spectrum = normalize_intensities(spectrum)
+    return spectrum
+
+
+def process_query(spectra):
+    return [peak_processing(metadata_processing(s)) for s in spectra]
+
+
+def minimal_process_query(spectra):
+    return [minimal_processing(s) for s in spectra]
 
 
 log(f"Parsing spectral file {args.query_file[0]} against: {args.db_files[0]}")
@@ -73,37 +99,25 @@ if verbose:
 
 log("Loading query file")
 spectra_query = list(load_from_mgf(args.query_file[0]))
+
 log('%s spectra found in the query file.' % len(spectra_query))
 log("Loading DB files")
 spectra_db = sum([list(load_from_mgf(i)) for i in args.db_files], [])
-log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(spectra_db))
-
-
-def metadata_processing(spectrum):
-    spectrum = default_filters(spectrum)
-    return spectrum
-
-
-def peak_processing(spectrum):
-    spectrum = default_filters(spectrum)
-    spectrum = normalize_intensities(spectrum)
-    return spectrum
-
-
-def process_query(spectra):
-    return [peak_processing(metadata_processing(s)) for s in spectra]
-
 
 log("Cleaning query")
-
 with nostdout(verbose):
     spectra_query = process_query(spectra_query)
 
-log("Cleaning database")
+if cleaning:
+    log("Cleaning database")
 
-with nostdout(verbose):
-    spectra_db = process_query(spectra_db)
+    with nostdout(verbose):
+        spectra_db = process_query(spectra_db)
+else :
+    log("Minimally cleaning database")
+    spectra_db = minimal_process_query(spectra_db)
 
+log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(spectra_db))
 log("Processing")
 
 similarity_score = PrecursorMzMatch(tolerance=args.parent_mz_tolerance, tolerance_type="Dalton")
@@ -114,7 +128,7 @@ cosine_greedy = CosineGreedy(tolerance=args.msms_mz_tolerance)
 data = []
 
 # for (x, y) in tzip(idx_row, idx_col):
-    # sleep(0.1)
+# sleep(0.1)
 # for (x, y) in zip(idx_row, idx_col):
 for (x, y) in tzip(idx_row, idx_col):
     if x < y:
@@ -122,17 +136,17 @@ for (x, y) in tzip(idx_row, idx_col):
         if (msms_score > args.min_cosine_score) & (n_matches > args.min_peaks):
             data.append({'msms_score': msms_score,
                          'matched_peaks': n_matches,
-                         'feature_id': x + 1,
-                         'reference_id': y + 1,
-                         'inchikey': spectra_db[y].get("name")})
+                         'feature_id': spectra_query[x].get("feature_id"),
+                         'short_inchikey': spectra_db[y].get("name")})
 df = pd.DataFrame(data)
 
-df.to_csv(args.o[0], sep='\t')
+df.to_csv(args.o[0], sep='\t', index=False)
 
 if verbose:
     log(f"Finished in {time.time() - start_time} seconds.")
     log(f"You can check your results in here {args.o[0]}")
 
+#if cleaning:
+#    save_as_mgf(spectra_db, "ISDB_averaged_cleaned_pos.mgf")    
+
 sys.exit(0)
-
-
