@@ -1,4 +1,5 @@
 import argparse
+import pickle
 import sys
 import time
 
@@ -9,6 +10,8 @@ from mandelbrot_spectral_lib_matcher.processor import process_query, minimal_pro
 from matchms.importing import load_from_mgf
 
 # These numbers are only in effect when running the program as a script
+from src.mandelbrot_spectral_lib_matcher.binary import read_binary_database
+
 DEFAULT_MS_TOLERANCE = 0.01
 DEFAULT_MSMS_TOLERANCE = 0.01
 DEFAULT_MIN_COSINE_SCORE = 0.2
@@ -63,20 +66,31 @@ if __name__ == '__main__':
 
     log('%s spectra found in the query file.' % len(query))
     log("Loading DB files")
-    database = sum([list(load_from_mgf(i)) for i in args.db_files], [])
+    database = []
+    for i in args.db_files:
+        with open(i, "rb") as file:
+            # We search for the header of our special format
+            # we do that because somehow pickle can read some of our MGF files as a pickle file…
+            log(f"Loading: {i}")
+            output = read_binary_database(file)
+            if output is None:
+                file.seek(0)  # We go back to the beginning of the file
+                new_db = list(load_from_mgf(i))
+
+                if cleaning:
+                    log(" Cleaning database")
+
+                    with nostdout(verbose):
+                        new_db = process_query(new_db)
+                else:
+                    log(" Minimally cleaning database")
+                    new_db = minimal_process_query(new_db)
+                database += new_db
+    # database = sum([list(load_from_mgf(i)) for i in args.db_files], [])
 
     log("Cleaning query")
     with nostdout(verbose):
         query = process_query(query)
-
-    if cleaning:
-        log("Cleaning database")
-
-        with nostdout(verbose):
-            database = process_query(database)
-    else:
-        log("Minimally cleaning database")
-        database = minimal_process_query(database)
 
     log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(database))
 
@@ -86,7 +100,7 @@ if __name__ == '__main__':
     df.to_csv(args.o, sep='\t', index=False)
 
     if verbose:
-        log(f"Finished in {time.time() - start_time} seconds.")
+        log(f"Finished in {time.time() - start_time:.2f} seconds.")
         log(f"You can check your results in here {args.o}")
 
     # if cleaning:
