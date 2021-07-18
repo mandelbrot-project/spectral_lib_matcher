@@ -36,9 +36,12 @@ The spectral_lib_matcher.py script takes 7 arguments.
 6. the minimal number of peaks between query and database spectra to return a spectral match
 7. the path of the annotation results file
 
-Command line example
+Command line example (you need to install the module first):
 
-`python src/mandelbrot_spectral_lib_matcher/processor.py path/to/your/query_spectra.mgf path/to/your/database_spectra.mgf 0.01 0.01 0.2 6 path/to/your/results_file.tsv`
+```shell
+pip install -e .   # This will install the module locally
+python src/mandelbrot_spectral_lib_matcher/processor.py path/to/your/query_spectra.mgf path/to/your/database_spectra.mgf 0.01 0.01 0.2 6 path/to/your/results_file.tsv
+```
 
 ## More on matchms
 
