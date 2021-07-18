@@ -10,7 +10,7 @@ from mandelbrot_spectral_lib_matcher.processor import process_query, minimal_pro
 from matchms.importing import load_from_mgf
 
 # These numbers are only in effect when running the program as a script
-from src.mandelbrot_spectral_lib_matcher.binary import read_binary_database
+from mandelbrot_spectral_lib_matcher.binary import read_binary_database
 
 DEFAULT_MS_TOLERANCE = 0.01
 DEFAULT_MSMS_TOLERANCE = 0.01
