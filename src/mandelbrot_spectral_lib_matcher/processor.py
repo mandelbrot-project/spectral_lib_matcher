@@ -83,7 +83,7 @@ if __name__ == '__main__':
                         help="the source MGF file")
     parser.add_argument("db_files", metavar='database.mgf', type=str, nargs='+',
                         help="the database(s) MGF file")
-    parser.add_argument("-o", metavar='file.out', type=str, required = True,
+    parser.add_argument("-o", metavar='file.out', type=str, default=sys.stdout,
                         help="output file")
     parser.add_argument("--parent_mz_tolerance", metavar='-p', type=float, nargs='?',
                         help=f"tolerance for the parent ion (MS) (default {DEFAULT_MS_TOLERANCE})",
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     else:
         log("Minimally cleaning database")
         database = minimal_process_query(database)
-
+    print(type(database))
     log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(database))
 
     log("Processing")
