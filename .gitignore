@@ -5,3 +5,4 @@ __pycache__
 *.bak
 .idea
 **/*.egg-info
+**/.eggs
