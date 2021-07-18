@@ -86,6 +86,8 @@ if __name__ == '__main__':
                     log(" Minimally cleaning database")
                     new_db = minimal_process_query(new_db)
                 database += new_db
+            else:
+                database += output
     # database = sum([list(load_from_mgf(i)) for i in args.db_files], [])
 
     log("Cleaning query")
