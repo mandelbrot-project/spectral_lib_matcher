@@ -138,7 +138,7 @@ if __name__ == '__main__':
     else:
         log("Minimally cleaning database")
         database = minimal_process_query(database)
-    print(type(database))
+
     log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(database))
 
     log("Processing")
