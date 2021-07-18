@@ -1,1 +1,1 @@
-import processor
+from . import processor
