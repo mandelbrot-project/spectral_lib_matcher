@@ -1,0 +1,13 @@
+name: spectral_lib_matcher_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - numpy
+  - pandas
+  - pip
+  - pip:
+    - matchms
+    - pytest
+    - pytest-runner
+    - tqdm

@@ -59,11 +59,11 @@ except:
     print(
         '''Please add input and output file path as first and second argument, InChI column header as third argument and finally the number of cpus you want to use.
         Example :
-        python spectral_lib_matcher.py /Users/pma/tmp/Lena_metabo_local/FBMN_metabo_lena/spectra/fbmn_lena_metabo_specs_ms.mgf /Users/pma/tmp/New_DNP_full_pos.mgf 0.01 0.01 0.2 6 /Users/pma/tmp/lena_matched.out''')
+        python processor.py /Users/pma/tmp/Lena_metabo_local/FBMN_metabo_lena/spectra/fbmn_lena_metabo_specs_ms.mgf /Users/pma/tmp/New_DNP_full_pos.mgf 0.01 0.01 0.2 6 /Users/pma/tmp/lena_matched.out''')
 
 
-# python spectral_lib_matcher.py /Users/pma/Dropbox/Research_UNIGE/Projets/Ongoing/MEMO/GNPS_output_GNPS_3/spectra/specs_ms.mgf /Users/pma/tmp/ISDB_DNP_msmatchready.mgf 0.01 0.01 0.2 6 /Users/pma/Dropbox/Research_UNIGE/Projets/Ongoing/MEMO/GNPS_output_GNPS_3/ISDB_results.out
-# python spectral_lib_matcher.py /Users/pma/Dropbox/Research_UNIGE/git_repos/pf_project/data/spectral/VGF_20plates_MN_spectra.mgf /Users/pma/tmp/ISDB_DNP_msmatchready.mgf 0.01 0.01 0.2 6 /Users/pma/Dropbox/Research_UNIGE/git_repos/pf_project/data/spectral/VGF_20plates_MN_ISDB_out.out
+# python processor.py /Users/pma/Dropbox/Research_UNIGE/Projets/Ongoing/MEMO/GNPS_output_GNPS_3/spectra/specs_ms.mgf /Users/pma/tmp/ISDB_DNP_msmatchready.mgf 0.01 0.01 0.2 6 /Users/pma/Dropbox/Research_UNIGE/Projets/Ongoing/MEMO/GNPS_output_GNPS_3/ISDB_results.out
+# python processor.py /Users/pma/Dropbox/Research_UNIGE/git_repos/pf_project/data/spectral/VGF_20plates_MN_spectra.mgf /Users/pma/tmp/ISDB_DNP_msmatchready.mgf 0.01 0.01 0.2 6 /Users/pma/Dropbox/Research_UNIGE/git_repos/pf_project/data/spectral/VGF_20plates_MN_ISDB_out.out
 # timer is started
 start_time = time.time()
 
