@@ -53,6 +53,6 @@ def process(spectra_query, spectra_db, parent_mz_tolerance, msms_mz_tolerance, m
             data.append({'msms_score': msms_score,
                          'matched_peaks': n_matches,
                          # Get the feature_id or generate one
-                         'feature_id': spectra_query[x].get("feature_id") or x + 1,
+                         'feature_id': spectra_query[x].get("scans") or x + 1,
                          'short_inchikey': spectra_db[y].get("name")})
     return pd.DataFrame(data)
