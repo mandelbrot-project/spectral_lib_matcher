@@ -99,7 +99,8 @@ if __name__ == '__main__':
     log("Processing")
     df = process(query, database, args.parent_mz_tolerance, args.msms_mz_tolerance, args.min_cosine_score,
                  args.min_peaks)
-    df.to_csv(args.o, sep='\t', compression='gzip', index=False)
+    
+    df.to_csv(args.o, sep='\t', index=False)
 
     if verbose:
         log(f"Finished in {time.time() - start_time:.2f} seconds.")
