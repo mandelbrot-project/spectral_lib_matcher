@@ -1,10 +1,7 @@
-import argparse
-import pickle
 import sys
 import time
 
 from mandelbrot_spectral_lib_matcher.nostdout import nostdout
-from mandelbrot_spectral_lib_matcher import logBuilder
 from mandelbrot_spectral_lib_matcher.processor import process_query, minimal_process_query, process
 
 from matchms.importing import load_from_mgf
@@ -22,6 +19,8 @@ class ProcessorConfig:
     query_file = None
     db_files = None
     output_file = None
+    verbose = True
+    cleaning = True
     parent_mz_tolerance = DEFAULT_MS_TOLERANCE
     msms_mz_tolerance = DEFAULT_MSMS_TOLERANCE
     min_cosine_score = DEFAULT_MIN_COSINE_SCORE
@@ -31,7 +30,71 @@ class ProcessorConfig:
         self.db_files = []
 
 
+def processor(log, config):
+    log(f"Parsing spectral file {config.query_file} against: {config.db_files}")
+    log(f"Output file: {config.output_file}")
+    log("Parameters:")
+    log(f" Parent tolerance (MS): {config.parent_mz_tolerance}")
+    log(f" MSMS tolerance: {config.msms_mz_tolerance}")
+    log(f" Minimal cosine score: {config.min_cosine_score}")
+    log(f" Minimum number of peaks: {config.min_peaks}")
+
+    if config.verbose:
+        start_time = time.time()
+
+    log("Loading query file")
+    query = list(load_from_mgf(config.query_file))
+
+    log('%s spectra found in the query file.' % len(query))
+    log("Loading DB files")
+    database = []
+    for i in config.db_files:
+        with open(i, "rb") as file:
+            # We search for the header of our special format
+            # we do that because somehow pickle can read some of our MGF files as a pickle file…
+            log(f"Loading: {i}")
+            output = read_binary_database(file)
+            if output is None:
+                file.seek(0)  # We go back to the beginning of the file
+                new_db = list(load_from_mgf(i))
+
+                if config.cleaning:
+                    log(" Cleaning database")
+
+                    with nostdout(config.verbose):
+                        new_db = process_query(new_db)
+                else:
+                    log(" Minimally cleaning database")
+                    new_db = minimal_process_query(new_db)
+                database += new_db
+            else:
+                database += output
+    # database = sum([list(load_from_mgf(i)) for i in args.db_files], [])
+
+    log("Cleaning query")
+    with nostdout(config.verbose):
+        query = process_query(query)
+
+    log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(database))
+
+    log("Processing")
+    df = process(query, database, config.parent_mz_tolerance, config.msms_mz_tolerance, config.min_cosine_score,
+                 config.min_peaks)
+
+    df.to_csv(config.output_file, sep='\t', index=False)
+
+    if config.verbose:
+        log(f"Finished in {time.time() - start_time:.2f} seconds.")
+        log(f"You can check your results in here {config.output_file}")
+
+    # if cleaning:
+    #    save_as_mgf(spectra_db, "ISDB_averaged_cleaned_pos.mgf")
+
+
 if __name__ == '__main__':
+    from mandelbrot_spectral_lib_matcher import logBuilder
+    import argparse
+
     parser = argparse.ArgumentParser(description="Match two mgf files")
     parser.add_argument("query_file", metavar='query.mgf', type=str, nargs=1,
                         help="the source MGF file")
@@ -58,12 +121,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    cleaning = args.c
-
-    verbose = args.v
-
-    log = logBuilder.logBuilder(verbose)
-
     config = ProcessorConfig()
     config.query_file = args.query_file
     config.db_files = args.db_files
@@ -72,64 +129,11 @@ if __name__ == '__main__':
     config.msms_mz_tolerance = args.msms_mz_tolerance
     config.min_cosine_score = args.min_cosine_score
     config.min_peaks = args.min_peaks
+    config.verbose = args.v
+    config.cleaning = args.c
 
-    log(f"Parsing spectral file {config.query_file} against: {config.db_files}")
-    log(f"Output file: {config.output_file}")
-    log("Parameters:")
-    log(f" Parent tolerance (MS): {config.parent_mz_tolerance}")
-    log(f" MSMS tolerance: {config.msms_mz_tolerance}")
-    log(f" Minimal cosine score: {config.min_cosine_score}")
-    log(f" Minimum number of peaks: {config.min_peaks}")
+    log = logBuilder.logBuilder(config.verbose)
 
-    if verbose:
-        start_time = time.time()
-
-    log("Loading query file")
-    query = list(load_from_mgf(config.query_file))
-
-    log('%s spectra found in the query file.' % len(query))
-    log("Loading DB files")
-    database = []
-    for i in config.db_files:
-        with open(i, "rb") as file:
-            # We search for the header of our special format
-            # we do that because somehow pickle can read some of our MGF files as a pickle file…
-            log(f"Loading: {i}")
-            output = read_binary_database(file)
-            if output is None:
-                file.seek(0)  # We go back to the beginning of the file
-                new_db = list(load_from_mgf(i))
-
-                if cleaning:
-                    log(" Cleaning database")
-
-                    with nostdout(verbose):
-                        new_db = process_query(new_db)
-                else:
-                    log(" Minimally cleaning database")
-                    new_db = minimal_process_query(new_db)
-                database += new_db
-            else:
-                database += output
-    # database = sum([list(load_from_mgf(i)) for i in args.db_files], [])
-
-    log("Cleaning query")
-    with nostdout(verbose):
-        query = process_query(query)
-
-    log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(database))
-
-    log("Processing")
-    df = process(query, database, config.parent_mz_tolerance, config.msms_mz_tolerance, config.min_cosine_score,
-                 config.min_peaks)
-
-    df.to_csv(config.output_file, sep='\t', index=False)
-
-    if verbose:
-        log(f"Finished in {time.time() - start_time:.2f} seconds.")
-        log(f"You can check your results in here {args.o}")
-
-    # if cleaning:
-    #    save_as_mgf(spectra_db, "ISDB_averaged_cleaned_pos.mgf")
+    processor(log, config)
 
     sys.exit(0)
