@@ -17,6 +17,20 @@ DEFAULT_MSMS_TOLERANCE = 0.01
 DEFAULT_MIN_COSINE_SCORE = 0.2
 DEFAULT_MIN_PEAKS = 6
 
+
+class ProcessorConfig:
+    query_file = None
+    db_files = None
+    output_file = None
+    parent_mz_tolerance = DEFAULT_MS_TOLERANCE
+    msms_mz_tolerance = DEFAULT_MSMS_TOLERANCE
+    min_cosine_score = DEFAULT_MIN_COSINE_SCORE
+    min_peaks = DEFAULT_MIN_PEAKS
+
+    def __init__(self):
+        self.db_files = []
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Match two mgf files")
     parser.add_argument("query_file", metavar='query.mgf', type=str, nargs=1,
@@ -50,24 +64,33 @@ if __name__ == '__main__':
 
     log = logBuilder.logBuilder(verbose)
 
-    log(f"Parsing spectral file {args.query_file[0]} against: {args.db_files[0]}")
-    log(f"Output file: {args.o}")
+    config = ProcessorConfig()
+    config.query_file = args.query_file
+    config.db_files = args.db_files
+    config.output_file = args.o
+    config.parent_mz_tolerance = args.parent_mz_tolerance
+    config.msms_mz_tolerance = args.msms_mz_tolerance
+    config.min_cosine_score = args.min_cosine_score
+    config.min_peaks = args.min_peaks
+
+    log(f"Parsing spectral file {config.query_file} against: {config.db_files}")
+    log(f"Output file: {config.output_file}")
     log("Parameters:")
-    log(f" Parent tolerance (MS): {args.parent_mz_tolerance}")
-    log(f" MSMS tolerance: {args.msms_mz_tolerance}")
-    log(f" Minimal cosine score: {args.min_cosine_score}")
-    log(f" Minimum number of peaks: {args.min_peaks}")
+    log(f" Parent tolerance (MS): {config.parent_mz_tolerance}")
+    log(f" MSMS tolerance: {config.msms_mz_tolerance}")
+    log(f" Minimal cosine score: {config.min_cosine_score}")
+    log(f" Minimum number of peaks: {config.min_peaks}")
 
     if verbose:
         start_time = time.time()
 
     log("Loading query file")
-    query = list(load_from_mgf(args.query_file[0]))
+    query = list(load_from_mgf(config.query_file))
 
     log('%s spectra found in the query file.' % len(query))
     log("Loading DB files")
     database = []
-    for i in args.db_files:
+    for i in config.db_files:
         with open(i, "rb") as file:
             # We search for the header of our special format
             # we do that because somehow pickle can read some of our MGF files as a pickle file…
@@ -97,10 +120,10 @@ if __name__ == '__main__':
     log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(database))
 
     log("Processing")
-    df = process(query, database, args.parent_mz_tolerance, args.msms_mz_tolerance, args.min_cosine_score,
-                 args.min_peaks)
-    
-    df.to_csv(args.o, sep='\t', index=False)
+    df = process(query, database, config.parent_mz_tolerance, config.msms_mz_tolerance, config.min_cosine_score,
+                 config.min_peaks)
+
+    df.to_csv(config.output_file, sep='\t', index=False)
 
     if verbose:
         log(f"Finished in {time.time() - start_time:.2f} seconds.")
