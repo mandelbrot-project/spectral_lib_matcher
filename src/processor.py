@@ -43,7 +43,7 @@ def processor(log, config):
         start_time = time.time()
 
     log("Loading query file")
-    query = list(load_from_mgf(config.query_file))
+    query = list(load_from_mgf(config.query_file[0]))
 
     log('%s spectra found in the query file.' % len(query))
     log("Loading DB files")
