@@ -3,9 +3,6 @@ import pandas as pd
 
 from matchms import calculate_scores
 
-from matchms.exporting import save_as_mgf
-
-from matchms.filtering import add_precursor_mz
 from matchms.filtering import default_filters
 from matchms.filtering import normalize_intensities
 
