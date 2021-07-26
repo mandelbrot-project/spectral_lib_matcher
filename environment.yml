@@ -1,4 +1,4 @@
-name: spectral_lib_matcher_env
+name: spectral_lib_matcher
 channels:
   - conda-forge
   - defaults
