@@ -22,7 +22,7 @@ docker run -it --rm -v $PWD:/app spectrallibmatcher bash
 Run the tests to check that everything works:
 
 ```shell
-docker run -it --rm -v $PWD:/app spectrallibmatcher bash --login scripts/run_tests.sh 
+docker run -it --rm -v $PWD:/app spectrallibmatcher bash --login scripts/run_tests
 ```
 
 ## Running the spectral matching
