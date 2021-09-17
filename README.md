@@ -40,6 +40,7 @@ usage: processor.py [-h] [-o file.out] [--parent_mz_tolerance [-p]] [--msms_mz_t
 - the path of the database spectral file (in .mgf format or our binary format) you want to use for annotation
 
 Command line example:
+
 ```shell
 python src/processor.py -v -o path/to/your/results_file.tsv -p 0.01 -m 0.01 -c 0.2 -k 6 query.mgf database.mgf  
 ```
@@ -63,7 +64,6 @@ There is nothing special to do, the processor will detect automatically if your 
 ```shell
 python src/processor.py -v -o path/to/your/results_file.tsv -p 0.01 -m 0.01 -c 0.2 -k 6 query_spectra.mgf yourdatabase.mdbl  
 ```
-
 
 ## More on matchms
 
