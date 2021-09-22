@@ -1,6 +1,6 @@
+import requests
 import sys
 import time
-import urllib.request
 
 from matchms.importing import load_from_mgf
 
@@ -47,9 +47,9 @@ def processor(log, config):
     if config.gnps_job:
         url = 'http://gnps.ucsd.edu/ProteoSAFe/DownloadResultFile?task=' + config.query_file[
             0] + '&block=main&file=spectra/specs_ms.mgf'
-        mgf = urllib.request.urlopen(url).read()
+        mgf = requests.get(url).text
         log("Saving temporary file")
-        print(mgf.decode(), file=open('data/' + config.query_file[0] + '.mgf', 'w'))
+        print(mgf, file=open('data/' + config.query_file[0] + '.mgf', 'w'))
         query = list(load_from_mgf('data/' + config.query_file[0] + '.mgf'))
     else:
         query = list(load_from_mgf(config.query_file[0]))
