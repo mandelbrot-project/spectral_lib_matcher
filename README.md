@@ -62,10 +62,16 @@ optional arguments:
   * -c                    additional cleaning step on the database file
   * -v                    print additional details to stdout
 
-Command line example:
+### Command line example:
 
 ```shell
-python src/processor.py -v -o path/to/your/results_file.tsv -p 0.01 -m 0.01 -c 0.2 -k 6 query.mgf database.mgf  
+python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 data/query.mgf data/spectral_lib.mgf 
+```
+
+Using the -g argument you can alternatively use a GNPS job id for a direct download of the spectral file
+
+```shell
+python src/processor.py -v -g -o data/annotations_erythro.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 d7a9cacf9ccd4510a04d119ab1561ea5 data/spectral_lib.mdbl  
 ```
 
 ## Using binary libraries
@@ -77,7 +83,7 @@ files that pickle would unmarshal)
 ### Create a binary library
 
 ```shell
-python  src/binary_library_builder.py -v -o yourdatabase.mdbl yourdatabase.mgf
+python  src/binary_library_builder.py -v -o data/spectral_lib.mdbl data/spectral_lib.mgf
 ```
 
 ### Use a binary library
@@ -85,8 +91,10 @@ python  src/binary_library_builder.py -v -o yourdatabase.mdbl yourdatabase.mgf
 There is nothing special to do, the processor will detect automatically if your library is a mgf or a binary.
 
 ```shell
-python src/processor.py -v -o path/to/your/results_file.tsv -p 0.01 -m 0.01 -c 0.2 -k 6 query_spectra.mgf yourdatabase.mdbl  
+python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 data/query.mgf data/spectral_lib.mdbl  
 ```
+
+
 
 ## More on matchms
 
