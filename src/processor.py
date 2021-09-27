@@ -1,13 +1,13 @@
+import requests
 import sys
 import time
-
-from mandelbrot_spectral_lib_matcher.nostdout import nostdout
-from mandelbrot_spectral_lib_matcher.processor import process_query, minimal_process_query, process
 
 from matchms.importing import load_from_mgf
 
 # These numbers are only in effect when running the program as a script
 from mandelbrot_spectral_lib_matcher.binary import read_binary_database
+from mandelbrot_spectral_lib_matcher.nostdout import nostdout
+from mandelbrot_spectral_lib_matcher.processor import process_query, minimal_process_query, process
 
 DEFAULT_MS_TOLERANCE = 0.01
 DEFAULT_MSMS_TOLERANCE = 0.01
@@ -18,6 +18,7 @@ DEFAULT_MIN_PEAKS = 6
 class ProcessorConfig:
     query_file = None
     db_files = None
+    gnps_job = False
     output_file = None
     verbose = True
     cleaning = True
@@ -43,7 +44,15 @@ def processor(log, config):
         start_time = time.time()
 
     log("Loading query file")
-    query = list(load_from_mgf(config.query_file[0]))
+    if config.gnps_job:
+        url = 'http://gnps.ucsd.edu/ProteoSAFe/DownloadResultFile?task=' + config.query_file[
+            0] + '&block=main&file=spectra/specs_ms.mgf'
+        mgf = requests.get(url).text
+        log("Saving temporary file")
+        print(mgf, file=open('data/' + config.query_file[0] + '.mgf', 'w'))
+        query = list(load_from_mgf('data/' + config.query_file[0] + '.mgf'))
+    else:
+        query = list(load_from_mgf(config.query_file[0]))
 
     log('%s spectra found in the query file.' % len(query))
     log("Loading DB files")
@@ -97,9 +106,11 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Match two mgf files")
     parser.add_argument("query_file", metavar='query.mgf', type=str, nargs=1,
-                        help="the source MGF file")
+                        help="the source MGF file or GNPS job ID (if -g == True)")
     parser.add_argument("db_files", metavar='database.mgf', type=str, nargs='+',
                         help="the database(s) MGF file")
+    parser.add_argument("-g", action='store_true',
+                        help="if GNPS is the source of the query_file")
     parser.add_argument("-o", metavar='file.out', type=str, default=sys.stdout,
                         help="output file")
     parser.add_argument("--parent_mz_tolerance",'-p', metavar='-p', type=float, nargs='?',
@@ -124,6 +135,7 @@ if __name__ == '__main__':
     config = ProcessorConfig()
     config.query_file = args.query_file
     config.db_files = args.db_files
+    config.gnps_job = args.g
     config.output_file = args.o
     config.parent_mz_tolerance = args.parent_mz_tolerance
     config.msms_mz_tolerance = args.msms_mz_tolerance
