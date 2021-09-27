@@ -102,16 +102,16 @@ if __name__ == '__main__':
                         help="the database(s) MGF file")
     parser.add_argument("-o", metavar='file.out', type=str, default=sys.stdout,
                         help="output file")
-    parser.add_argument("--parent_mz_tolerance", metavar='-p', type=float, nargs='?',
+    parser.add_argument("--parent_mz_tolerance",'-p', metavar='-p', type=float, nargs='?',
                         help=f"tolerance for the parent ion (MS) (default {DEFAULT_MS_TOLERANCE})",
                         default=DEFAULT_MS_TOLERANCE)
-    parser.add_argument("--msms_mz_tolerance", metavar='-m', type=float, nargs='?',
+    parser.add_argument("--msms_mz_tolerance", '-m', metavar='-m', type=float, nargs='?',
                         help=f"tolerance for the MS/MS ions (default {DEFAULT_MSMS_TOLERANCE})",
                         default=DEFAULT_MSMS_TOLERANCE)
-    parser.add_argument("--min_cosine_score", metavar='-s', type=float, nargs='?',
+    parser.add_argument("--min_cosine_score", '-s', metavar='-s', type=float, nargs='?',
                         help=f"minimal cosine score to consider (default {DEFAULT_MIN_COSINE_SCORE})",
                         default=DEFAULT_MIN_COSINE_SCORE)
-    parser.add_argument("--min_peaks", metavar='-k', type=int, nargs='?',
+    parser.add_argument("--min_peaks",'-k', metavar='-k', type=int, nargs='?',
                         help=f"minimal number of peaks to consider (default {DEFAULT_MIN_PEAKS})",
                         default=DEFAULT_MIN_PEAKS)
     parser.add_argument("-c", action='store_true',
