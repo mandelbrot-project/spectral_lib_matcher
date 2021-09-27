@@ -39,7 +39,8 @@ docker run -it --rm -v $PWD:/app spectrallibmatcher bash --login scripts/run_tes
 ## Running the spectral matching
 
 ```
-usage: processor.py [-h] [-o file.out] [--parent_mz_tolerance [-p]] [--msms_mz_tolerance [-m]] [--min_cosine_score [-c]] [--min_peaks [-k]] [-c] [-v] query.mgf database.mgf [database.mgf ...]
+python src/processor.py [-h] [-g] [-o file.out] [--parent_mz_tolerance [-p]] [--msms_mz_tolerance [-m]] [--min_cosine_score [-s]] [--min_peaks [-k]] [-c] [-v]
+                    query.mgf database.mgf [database.mgf ...]
 ```
 
 positional arguments:
