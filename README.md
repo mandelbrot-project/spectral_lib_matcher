@@ -9,6 +9,17 @@ query file and a library file).
 
 You can create a conda environment with environment.yml.
 
+```shell
+conda env create -f environment.yml
+```
+
+and activate it 
+
+```shell
+conda activate spectral_lib_matcher
+```
+
+
 ### With docker.
 
 ```shell
@@ -31,13 +42,24 @@ docker run -it --rm -v $PWD:/app spectrallibmatcher bash --login scripts/run_tes
 usage: processor.py [-h] [-o file.out] [--parent_mz_tolerance [-p]] [--msms_mz_tolerance [-m]] [--min_cosine_score [-c]] [--min_peaks [-k]] [-c] [-v] query.mgf database.mgf [database.mgf ...]
 ```
 
-- -p:  the parent mass tolerance (in Da)
-- -m: the msms fragments mass tolerance (in Da)
-- -c: the minimal cosine score to return a spectral match
-- -k: the minimal number of peaks between query and database spectra to return a spectral match
-- -o: the path of the annotation results file
-- the path of the query spectral file (in .mgf format) you want to annotate
-- the path of the database spectral file (in .mgf format or our binary format) you want to use for annotation
+positional arguments:
+  * query.mgf             the source MGF file or GNPS job ID (if -g == True)
+  * database.mgf          the database(s) MGF or binary format
+
+optional arguments:
+  * -h, --help            show this help message and exit
+  * -g                    specifies that GNPS is the source of the query_file
+  * -o file.out           output file
+  * --parent_mz_tolerance [-p], -p [-p]
+                        * tolerance for the parent ion (MS) (default 0.01)
+  * --msms_mz_tolerance [-m], -m [-m]
+                        * tolerance for the MS/MS ions (default 0.01)
+  * --min_cosine_score [-s], -s [-s]
+                        * minimal cosine score to consider (default 0.2)
+  * --min_peaks [-k], -k [-k]
+                        * minimal number of peaks to consider (default 6)
+  * -c                    additional cleaning step on the database file
+  * -v                    print additional details to stdout
 
 Command line example:
 

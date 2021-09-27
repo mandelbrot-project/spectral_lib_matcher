@@ -7,4 +7,3 @@ __pycache__
 **/*.egg-info
 **/.eggs
 test_data
-data

@@ -104,13 +104,13 @@ if __name__ == '__main__':
     from mandelbrot_spectral_lib_matcher import logBuilder
     import argparse
 
-    parser = argparse.ArgumentParser(description="Match two mgf files")
+    parser = argparse.ArgumentParser(description="Matches two mgf files")
     parser.add_argument("query_file", metavar='query.mgf', type=str, nargs=1,
                         help="the source MGF file or GNPS job ID (if -g == True)")
     parser.add_argument("db_files", metavar='database.mgf', type=str, nargs='+',
-                        help="the database(s) MGF file")
+                        help="the database(s) MGF or binary format")
     parser.add_argument("-g", action='store_true',
-                        help="if GNPS is the source of the query_file")
+                        help="specifies that GNPS is the source of the query_file")
     parser.add_argument("-o", metavar='file.out', type=str, default=sys.stdout,
                         help="output file")
     parser.add_argument("--parent_mz_tolerance",'-p', metavar='-p', type=float, nargs='?',
