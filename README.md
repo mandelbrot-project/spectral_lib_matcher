@@ -1,6 +1,6 @@
 # Spectral library matcher
 
-A script based on the matchms library allowing to calculate spectral similarity measures between two mgf (usually a
+A script based on the [matchms](https://github.com/matchms/matchms) library allowing to calculate spectral similarity measures between two mgf (usually a
 query file and a library file).
 
 ## Requirements
