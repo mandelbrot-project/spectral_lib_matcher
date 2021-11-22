@@ -11,4 +11,5 @@ dependencies:
       - pytest
       - pytest-runner
       - tqdm
+  - python <= 3.9
   - requests
