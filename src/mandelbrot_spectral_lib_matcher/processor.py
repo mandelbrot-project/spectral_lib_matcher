@@ -51,9 +51,9 @@ def process(spectra_query, spectra_db, parent_mz_tolerance, msms_mz_tolerance, m
                          'matched_peaks': n_matches,
                          # Get the feature_id or generate one
                          'feature_id': spectra_query[x].get("scans") or x + 1,
-                         'short_inchikey': spectra_db[y].get("name"),
+                         'short_inchikey': spectra_db[y].get("compound_name"),
                          'smiles': spectra_db[y].get("smiles"),
                          'molecular_formula': spectra_db[y].get("molecular_formula"),
-                         'exact_mass': spectra_db[y].get("exactmass")
+                         'exact_mass': spectra_db[y].get("parent_mass")
                         })
     return pd.DataFrame(data)
