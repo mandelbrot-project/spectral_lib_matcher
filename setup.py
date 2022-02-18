@@ -70,7 +70,7 @@ setup(
     ],
     python_requires='>=3.5.*,<=3.9.7',
     install_requires=[
-        'matchms',
+        'matchms>= 0.14.0',
         'numpy',
         'pandas'
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
