@@ -7,7 +7,7 @@ dependencies:
   - pandas
   - pip
   - pip:
-      - matchms <= 0.14.0
+      - matchms >= 0.14.0
       - pytest
       - pytest-runner
       - tqdm
