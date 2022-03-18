@@ -68,7 +68,7 @@ setup(
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
-    python_requires='>=3.5.*,<=3.9.7',
+    python_requires='>=3.5.*',
     install_requires=[
         'matchms>= 0.14.0',
         'numpy',
