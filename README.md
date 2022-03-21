@@ -39,7 +39,7 @@ docker run -it --rm -v $PWD:/app spectrallibmatcher bash --login scripts/run_tes
 ## Running the spectral matching
 
 ```
-python src/processor.py [-h] [-g] [-o file.out] [--parent_mz_tolerance [-p]] [--msms_mz_tolerance [-m]] [--min_cosine_score [-s]] [--min_peaks [-k]] [-c] [-v]
+python src/processor.py [-h] [-g] [-o file.out] [--parent_mz_tolerance [-p]] [--msms_mz_tolerance [-m]] [--min_score [-s]] [--similarity_method [-z]] [--min_peaks [-k]] [-c] [-v]
                     query.mgf database.mgf [database.mgf ...]
 ```
 
@@ -55,8 +55,10 @@ optional arguments:
                         * tolerance for the parent ion (MS) (default 0.01)
   * --msms_mz_tolerance [-m], -m [-m]
                         * tolerance for the MS/MS ions (default 0.01)
-  * --min_cosine_score [-s], -s [-s]
-                        * minimal cosine score to consider (default 0.2)
+  * --min_score [-s], -s [-s]
+                        * minimal score to consider (default 0.2)
+  * --similarity_method [-z], -z [-z]
+                        * similarity method used to perform spectral matching (default ModifiedCosine)
   * --min_peaks [-k], -k [-k]
                         * minimal number of peaks to consider (default 6)
   * -c                    additional cleaning step on the database file
@@ -65,13 +67,13 @@ optional arguments:
 ### Command line example:
 
 ```shell
-python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 data/query.mgf data/spectral_lib.mgf 
+python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine data/query.mgf data/spectral_lib.mgf 
 ```
 
 Using the -g argument you can alternatively use a GNPS job id for a direct download of the spectral file
 
 ```shell
-python src/processor.py -v -g -o data/annotations_erythro.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 d7a9cacf9ccd4510a04d119ab1561ea5 data/spectral_lib.mdbl  
+python src/processor.py -v -g -o data/annotations_erythro.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine d7a9cacf9ccd4510a04d119ab1561ea5 data/spectral_lib.mdbl  
 ```
 
 ## Using binary libraries
@@ -91,7 +93,7 @@ python  src/binary_library_builder.py -v -o data/spectral_lib.mdbl data/spectral
 There is nothing special to do, the processor will detect automatically if your library is a mgf or a binary.
 
 ```shell
-python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 data/query.mgf data/spectral_lib.mdbl  
+python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 z ModifiedCosine data/query.mgf data/spectral_lib.mdbl  
 ```
 
 

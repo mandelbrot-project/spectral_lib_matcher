@@ -11,8 +11,9 @@ from mandelbrot_spectral_lib_matcher.processor import process_query, minimal_pro
 
 DEFAULT_MS_TOLERANCE = 0.01
 DEFAULT_MSMS_TOLERANCE = 0.01
-DEFAULT_MIN_COSINE_SCORE = 0.2
+DEFAULT_MIN_SCORE = 0.2
 DEFAULT_MIN_PEAKS = 6
+DEFAULT_MSMS_SIMILARITY = "ModifiedCosine"
 
 
 class ProcessorConfig:
@@ -24,8 +25,9 @@ class ProcessorConfig:
     cleaning = True
     parent_mz_tolerance = DEFAULT_MS_TOLERANCE
     msms_mz_tolerance = DEFAULT_MSMS_TOLERANCE
-    min_cosine_score = DEFAULT_MIN_COSINE_SCORE
+    min_score = DEFAULT_MIN_SCORE
     min_peaks = DEFAULT_MIN_PEAKS
+    similarity_method = DEFAULT_MSMS_SIMILARITY
 
     def __init__(self):
         self.db_files = []
@@ -37,8 +39,9 @@ def processor(log, config):
     log("Parameters:")
     log(f" Parent tolerance (MS): {config.parent_mz_tolerance}")
     log(f" MSMS tolerance: {config.msms_mz_tolerance}")
-    log(f" Minimal cosine score: {config.min_cosine_score}")
+    log(f" Minimal score: {config.min_score}")
     log(f" Minimum number of peaks: {config.min_peaks}")
+    log(f" Similarity method: {config.similarity_method}")
 
     if config.verbose:
         start_time = time.time()
@@ -87,8 +90,8 @@ def processor(log, config):
     log('Your query spectra will be matched against the %s spectra of the spectral library.' % len(database))
 
     log("Processing")
-    df = process(query, database, config.parent_mz_tolerance, config.msms_mz_tolerance, config.min_cosine_score,
-                 config.min_peaks)
+    df = process(query, database, config.parent_mz_tolerance, config.msms_mz_tolerance, config.min_score,
+                 config.min_peaks, config.similarity_method)
 
     df.to_csv(config.output_file, sep='\t', index=False)
 
@@ -119,12 +122,15 @@ if __name__ == '__main__':
     parser.add_argument("--msms_mz_tolerance", '-m', metavar='-m', type=float, nargs='?',
                         help=f"tolerance for the MS/MS ions (default {DEFAULT_MSMS_TOLERANCE})",
                         default=DEFAULT_MSMS_TOLERANCE)
-    parser.add_argument("--min_cosine_score", '-s', metavar='-s', type=float, nargs='?',
-                        help=f"minimal cosine score to consider (default {DEFAULT_MIN_COSINE_SCORE})",
-                        default=DEFAULT_MIN_COSINE_SCORE)
+    parser.add_argument("--min_score", '-s', metavar='-s', type=float, nargs='?',
+                        help=f"minimal score to consider (default {DEFAULT_MIN_SCORE})",
+                        default=DEFAULT_MIN_SCORE)
     parser.add_argument("--min_peaks",'-k', metavar='-k', type=int, nargs='?',
                         help=f"minimal number of peaks to consider (default {DEFAULT_MIN_PEAKS})",
                         default=DEFAULT_MIN_PEAKS)
+    parser.add_argument("--similarity_method",'-z', metavar='-z', type=str, nargs='?',
+                        help=f"Similarity method (default {DEFAULT_MSMS_SIMILARITY})",
+                        default=DEFAULT_MSMS_SIMILARITY)
     parser.add_argument("-c", action='store_true',
                         help="additional cleaning step on the database file")
     parser.add_argument("-v", action='store_true',
@@ -139,8 +145,9 @@ if __name__ == '__main__':
     config.output_file = args.o
     config.parent_mz_tolerance = args.parent_mz_tolerance
     config.msms_mz_tolerance = args.msms_mz_tolerance
-    config.min_cosine_score = args.min_cosine_score
+    config.min_score = args.min_score
     config.min_peaks = args.min_peaks
+    config.similarity_method = args.similarity_method
     config.verbose = args.v
     config.cleaning = args.c
 

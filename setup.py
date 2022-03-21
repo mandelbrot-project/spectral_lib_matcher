@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 
 setup(
     name='mandelbrot_spectral_lib_matcher',
-    version='0.0.1',
+    version='0.0.2',
     license='BSD-2-Clause',
     description='Calculate spectral similarity between two mgf files.',
     long_description='%s\n%s' % (
@@ -70,7 +70,7 @@ setup(
     ],
     python_requires='>=3.5.*',
     install_requires=[
-        'matchms>= 0.14.0',
+        'matchms>= 0.15.0',
         'numpy',
         'pandas'
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
