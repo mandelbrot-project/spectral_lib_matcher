@@ -93,7 +93,7 @@ python  src/binary_library_builder.py -v -o data/spectral_lib.mdbl data/spectral
 There is nothing special to do, the processor will detect automatically if your library is a mgf or a binary.
 
 ```shell
-python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 z ModifiedCosine data/query.mgf data/spectral_lib.mdbl  
+python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine data/query.mgf data/spectral_lib.mdbl  
 ```
 
 
