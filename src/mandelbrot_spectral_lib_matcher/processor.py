@@ -7,6 +7,9 @@ from matchms.filtering import default_filters
 from matchms.filtering import normalize_intensities
 
 from matchms.similarity import CosineGreedy
+from matchms.similarity import CosineHungarian
+from matchms.similarity import ModifiedCosine
+from matchms.similarity import NeutralLossesCosine
 from matchms.similarity import PrecursorMzMatch
 
 from tqdm.contrib import tzip
@@ -36,17 +39,17 @@ def minimal_process_query(spectra):
     return [minimal_processing(s) for s in spectra]
 
 
-def process(spectra_query, spectra_db, parent_mz_tolerance, msms_mz_tolerance, min_cosine, min_peaks):
+def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_tolerance=0.01, min_score=0.2, min_peaks=6, similarity_method="ModifiedCosine"):
     similarity_score = PrecursorMzMatch(tolerance=parent_mz_tolerance, tolerance_type="Dalton")
     scores = calculate_scores(spectra_query, spectra_db, similarity_score)
     indices = np.where(np.asarray(scores.scores))
     idx_row, idx_col = indices
-    cosine_greedy = CosineGreedy(tolerance=msms_mz_tolerance)
+    spectral_similarity = eval(similarity_method)(tolerance=msms_mz_tolerance)
     data = []
 
     for (x, y) in tzip(idx_row, idx_col):
-        msms_score, n_matches = cosine_greedy.pair(spectra_query[x], spectra_db[y])[()]
-        if (msms_score > min_cosine) & (n_matches > min_peaks):
+        msms_score, n_matches = spectral_similarity.pair(spectra_query[x], spectra_db[y])[()]
+        if (msms_score > min_score) & (n_matches > min_peaks):
             data.append({'msms_score': msms_score,
                          'matched_peaks': n_matches,
                          # Get the feature_id or generate one
