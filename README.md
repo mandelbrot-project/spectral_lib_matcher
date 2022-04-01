@@ -73,7 +73,7 @@ python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -
 Using the -g argument you can alternatively use a GNPS job id for a direct download of the spectral file
 
 ```shell
-python src/processor.py -v -g -o data/annotations_erythro.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine d7a9cacf9ccd4510a04d119ab1561ea5 data/spectral_lib.mdbl  
+python src/processor.py -v -g -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine d7a9cacf9ccd4510a04d119ab1561ea5 data/spectral_lib.mdbl 
 ```
 
 ## Using binary libraries
