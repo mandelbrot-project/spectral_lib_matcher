@@ -1,3 +1,4 @@
+import gensim
 import numpy as np
 import pandas as pd
 
@@ -12,8 +13,11 @@ from matchms.similarity import ModifiedCosine
 from matchms.similarity import NeutralLossesCosine
 from matchms.similarity import PrecursorMzMatch
 
-from tqdm.contrib import tzip
+from ms2deepscore import MS2DeepScore
+from ms2deepscore.models import load_model
+from spec2vec import Spec2Vec
 
+from tqdm.contrib import tzip
 
 def metadata_processing(spectrum):
     spectrum = default_filters(spectrum)
@@ -40,17 +44,32 @@ def minimal_process_query(spectra):
 
 
 def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_tolerance=0.01, min_score=0.2, min_peaks=6, similarity_method="ModifiedCosine"):
+    newMethods= ["Spec2Vec","MS2DeepScore"]
     similarity_score = PrecursorMzMatch(tolerance=parent_mz_tolerance, tolerance_type="Dalton")
     scores = calculate_scores(spectra_query, spectra_db, similarity_score)
     indices = np.where(np.asarray(scores.scores))
     idx_row, idx_col = indices
-    spectral_similarity = eval(similarity_method)(tolerance=msms_mz_tolerance)
+    spectral_similarity = eval(similarity_method)
+    method_name = spectral_similarity.__name__
+    print(method_name)
+    if (method_name not in newMethods):
+        spectral_similarity = spectral_similarity(tolerance=msms_mz_tolerance)
+    elif (method_name == "Spec2Vec"):
+        spectral_similarity = spectral_similarity(model=gensim.models.Word2Vec.load("models/spec2vec_AllPositive_ratio05_filtered_201101_iter_15.model"), intensity_weighting_power=0.5, allowed_missing_percentage=5.0)
+        spectra_db = process_query(spectra_db)
+    else:
+        spectral_similarity = spectral_similarity(model=load_model("models/MS2DeepScore_allGNPSpositive_10k_500_500_200.hdf5"))
+
     data = []
 
     for (x, y) in tzip(idx_row, idx_col):
-        msms_score, n_matches = spectral_similarity.pair(spectra_query[x], spectra_db[y])[()]
-        if (msms_score > min_score) & (n_matches > min_peaks):
-            data.append({'msms_score': msms_score,
+        if (method_name not in newMethods):
+            msms_score, n_matches = spectral_similarity.pair(spectra_query[x], spectra_db[y])[()]
+        else:
+            msms_score = spectral_similarity.pair(spectra_query[x], spectra_db[y])
+            cosine_score, n_matches = ModifiedCosine(tolerance=msms_mz_tolerance).pair(spectra_query[x], spectra_db[y])[()]
+            if (msms_score > min_score) & (n_matches > min_peaks):
+                data.append({'msms_score': msms_score,
                          'matched_peaks': n_matches,
                          # Get the feature_id or generate one
                          'feature_id': spectra_query[x].get("scans") or x + 1,
@@ -59,4 +78,5 @@ def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_toleran
                          'molecular_formula': spectra_db[y].get("molecular_formula"),
                          'exact_mass': spectra_db[y].get("parent_mass")
                         })
+
     return pd.DataFrame(data)

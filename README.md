@@ -96,9 +96,15 @@ There is nothing special to do, the processor will detect automatically if your 
 python src/processor.py -v -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine data/query.mgf data/spectral_lib.mdbl  
 ```
 
+### For the h4ck3rs
 
+You can also use `Spec2Vec` and `MS2DeepScore`. 
+Therefore, you'll need to either train your own models or get them from Zenodo as indicated in the respective repositories (and store them in `models/`).
+This part experimental and we won't offer support for it.
 
-## More on matchms
+## Citations
 
-You can follow Florian Huber excellent tutorial
-here https://blog.esciencecenter.nl/build-your-own-mass-spectrometry-analysis-pipeline-in-python-using-matchms-part-i-d96c718c68ee
+Depending on which parts you used, do not forget to cite:
+- matchms: https://doi.org/10.21105/joss.02411 
+- spec2vec: https://doi.org/10.1371/journal.pcbi.1008724
+- ms2deepscore: https://doi.org/10.1186/s13321-021-00558-4

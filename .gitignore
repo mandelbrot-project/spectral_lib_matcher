@@ -6,4 +6,5 @@ __pycache__
 .idea
 **/*.egg-info
 **/.eggs
+models
 test_data

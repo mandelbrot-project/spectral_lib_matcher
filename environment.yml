@@ -7,9 +7,11 @@ dependencies:
   - pandas
   - pip
   - pip:
-      - matchms >= 0.15.0
+      - matchms >= 0.16.0
+      - ms2deepscore >= 0.2.3
       - pytest
       - pytest-runner
+      - spec2vec >= 0.6.0
       - tqdm
-  - python >=3.5.*
+  - python >=3.7.*
   - requests
