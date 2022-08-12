@@ -1,10 +1,8 @@
-import shutil
 import pytest
-
-from matchms.importing import load_from_mgf
-from mandelbrot_spectral_lib_matcher.processor import process, process_query, minimal_process_query
-
+import shutil
 from mandelbrot_spectral_lib_matcher.binary import write_binary_database, read_binary_database
+from mandelbrot_spectral_lib_matcher.processor import process, process_query, minimal_process_query
+from matchms.importing import load_from_mgf
 
 
 class TestBinaryDatabase:
@@ -29,7 +27,6 @@ class TestBinaryDatabase:
         df = process(self.query, bin_database, 0.01, 0.01, 0.2, 6)
         tmpdir.remove()
         assert df.iloc[0, :].matched_peaks == 85
-
 
     def test_cosine(self):
         df = process(self.query, self.database, 0.01, 0.01, 0.2, 6)

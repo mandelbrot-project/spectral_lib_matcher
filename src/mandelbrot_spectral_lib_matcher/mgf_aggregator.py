@@ -1,10 +1,10 @@
-import pandas as pd
-import os
 import glob
-from time import sleep
+import os
+import pandas as pd
 import sys
-from matchms.importing import load_from_mgf
 from matchms.exporting import save_as_mgf
+from matchms.importing import load_from_mgf
+from time import sleep
 
 
 sample_dir = "C:/Users/gaudrya.FARMA/Desktop/VGF_individual_files_pos/"
@@ -26,11 +26,11 @@ for sample_directory in samples_dir:
     sleep(0.05)
 
     os.chdir(sample_directory)
-    sample = sample_directory.split(sample_dir,1)[1]
+    sample = sample_directory.split(sample_dir, 1)[1]
     mgf_file = glob.glob('*.mgf')[0]
     sample_spec = list(load_from_mgf(mgf_file))
     for spectrum in sample_spec:
-        original_feat_id = sample + '_feature_' + spectrum.metadata['scans'] 
+        original_feat_id = sample + '_feature_' + spectrum.metadata['scans']
         spectrum.set('original_feature_id', original_feat_id)
         spectrum.set('feature_id', i)
         spectrum.set('scans', i)
