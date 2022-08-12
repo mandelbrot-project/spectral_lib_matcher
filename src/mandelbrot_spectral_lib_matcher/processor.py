@@ -51,7 +51,7 @@ def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_toleran
     idx_row, idx_col = indices
     spectral_similarity = eval(similarity_method)
     method_name = spectral_similarity.__name__
-    print(method_name)
+
     if (method_name not in newMethods):
         spectral_similarity = spectral_similarity(tolerance=msms_mz_tolerance)
     elif (method_name == "Spec2Vec"):
@@ -68,7 +68,7 @@ def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_toleran
         else:
             msms_score = spectral_similarity.pair(spectra_query[x], spectra_db[y])
             cosine_score, n_matches = ModifiedCosine(tolerance=msms_mz_tolerance).pair(spectra_query[x], spectra_db[y])[()]
-            if (msms_score > min_score) & (n_matches > min_peaks):
+        if (msms_score > min_score) & (n_matches > min_peaks):
                 data.append({'msms_score': msms_score,
                          'matched_peaks': n_matches,
                          # Get the feature_id or generate one
