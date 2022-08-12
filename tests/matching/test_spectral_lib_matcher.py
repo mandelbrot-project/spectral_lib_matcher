@@ -19,7 +19,3 @@ class TestMatching:
     def test_cosine(self):
         df = process(self.query, self.database, 0.01, 0.01, 0.2, 6)
         assert abs(df.iloc[0, :].msms_score - 0.738847) <= 0.000001
-
-    def test_spec2vec(self):
-        df = process(self.query, self.database, 0.01, 0.01, 0.2, 6, 'Spec2Vec')
-        assert abs(df.iloc[0, :].msms_score - 0.738847) <= 0.000001
