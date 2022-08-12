@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from matchms.importing import load_from_mgf
 from mandelbrot_spectral_lib_matcher.processor import process, process_query, minimal_process_query
+from matchms.importing import load_from_mgf
 
 
 class TestMatching:

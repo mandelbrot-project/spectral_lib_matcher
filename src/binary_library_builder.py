@@ -2,13 +2,12 @@ import argparse
 import pickle
 import sys
 import time
-
 from matchms.importing import load_from_mgf
 
 from mandelbrot_spectral_lib_matcher import logBuilder
+from mandelbrot_spectral_lib_matcher.binary import write_binary_database
 from mandelbrot_spectral_lib_matcher.nostdout import nostdout
 from mandelbrot_spectral_lib_matcher.processor import process_query, minimal_process_query
-from mandelbrot_spectral_lib_matcher.binary import write_binary_database
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Convert mgf(s) to a preprocessed binary library")

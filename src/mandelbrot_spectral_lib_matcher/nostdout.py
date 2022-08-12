@@ -4,6 +4,7 @@ import contextlib
 import io
 import sys
 
+
 # define a warning silencer that disables stdout temporarily, use it with a with nostdout(): block
 # see https://stackoverflow.com/a/2829036
 

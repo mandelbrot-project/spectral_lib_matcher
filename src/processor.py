@@ -1,7 +1,6 @@
 import requests
 import sys
 import time
-
 from matchms.importing import load_from_mgf
 
 # These numbers are only in effect when running the program as a script
@@ -116,7 +115,7 @@ if __name__ == '__main__':
                         help="specifies that GNPS is the source of the query_file")
     parser.add_argument("-o", metavar='file.out', type=str, default=sys.stdout,
                         help="output file")
-    parser.add_argument("--parent_mz_tolerance",'-p', metavar='-p', type=float, nargs='?',
+    parser.add_argument("--parent_mz_tolerance", '-p', metavar='-p', type=float, nargs='?',
                         help=f"tolerance for the parent ion (MS) (default {DEFAULT_MS_TOLERANCE})",
                         default=DEFAULT_MS_TOLERANCE)
     parser.add_argument("--msms_mz_tolerance", '-m', metavar='-m', type=float, nargs='?',
@@ -125,10 +124,10 @@ if __name__ == '__main__':
     parser.add_argument("--min_score", '-s', metavar='-s', type=float, nargs='?',
                         help=f"minimal score to consider (default {DEFAULT_MIN_SCORE})",
                         default=DEFAULT_MIN_SCORE)
-    parser.add_argument("--min_peaks",'-k', metavar='-k', type=int, nargs='?',
+    parser.add_argument("--min_peaks", '-k', metavar='-k', type=int, nargs='?',
                         help=f"minimal number of peaks to consider (default {DEFAULT_MIN_PEAKS})",
                         default=DEFAULT_MIN_PEAKS)
-    parser.add_argument("--similarity_method",'-z', metavar='-z', type=str, nargs='?',
+    parser.add_argument("--similarity_method", '-z', metavar='-z', type=str, nargs='?',
                         help=f"Similarity method (default {DEFAULT_MSMS_SIMILARITY})",
                         default=DEFAULT_MSMS_SIMILARITY)
     parser.add_argument("-c", action='store_true',
