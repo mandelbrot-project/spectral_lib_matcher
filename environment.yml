@@ -1,13 +1,14 @@
 name: spectral_lib_matcher
 channels:
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
   - numpy
+  - matchms
   - pandas
   - pip
   - pip:
-      - matchms >= 0.16.0
       - ms2deepscore >= 0.2.3
       - pytest
       - pytest-runner
