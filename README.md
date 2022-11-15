@@ -2,7 +2,7 @@
 
 A script based on the [matchms](https://github.com/matchms/matchms) library allowing to calculate spectral similarity
 measures between two mgf (usually a
-query file and a library file).
+query file and a library file). A library of natural products in silico generated spectra is availabe here: https://zenodo.org/record/5607264#.Y3OrbHbMKUk
 
 ## Requirements
 
