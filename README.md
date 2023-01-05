@@ -77,6 +77,12 @@ Using the -g argument you can alternatively use a GNPS job id for a direct downl
 python src/processor.py -v -g -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine d7a9cacf9ccd4510a04d119ab1561ea5 data/spectral_lib.mdbl 
 ```
 
+If you want to compare two MGF's without structural annotation, use the `--index true` argument to match indices (feature_id's) instead.
+
+```shell
+python src/processor.py -v -g -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine data/query.mgf data/spectral_lib.mgf -i true
+```
+
 ## Using binary libraries
 
 To accelerate the matching especially when always using the same library, it is possible to use specialy crafted binary

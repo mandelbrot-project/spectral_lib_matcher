@@ -19,6 +19,7 @@ class ProcessorConfig:
     query_file = None
     db_files = None
     gnps_job = False
+    index = False
     output_file = None
     verbose = True
     cleaning = True
@@ -90,7 +91,7 @@ def processor(log, config):
 
     log("Processing")
     df = process(query, database, config.parent_mz_tolerance, config.msms_mz_tolerance, config.min_score,
-                 config.min_peaks, config.similarity_method)
+                 config.min_peaks, config.similarity_method, config.index)
 
     df.to_csv(config.output_file, sep='\t', index=False)
 
@@ -115,6 +116,8 @@ if __name__ == '__main__':
                         help="specifies that GNPS is the source of the query_file")
     parser.add_argument("-o", metavar='file.out', type=str, default=sys.stdout,
                         help="output file")
+    parser.add_argument("--index", "-i", metavar='-i', type=bool, nargs=1,
+                        help="output the indices of the library also")
     parser.add_argument("--parent_mz_tolerance", '-p', metavar='-p', type=float, nargs='?',
                         help=f"tolerance for the parent ion (MS) (default {DEFAULT_MS_TOLERANCE})",
                         default=DEFAULT_MS_TOLERANCE)
@@ -141,6 +144,7 @@ if __name__ == '__main__':
     config.query_file = args.query_file
     config.db_files = args.db_files
     config.gnps_job = args.g
+    config.index = args.index
     config.output_file = args.o
     config.parent_mz_tolerance = args.parent_mz_tolerance
     config.msms_mz_tolerance = args.msms_mz_tolerance

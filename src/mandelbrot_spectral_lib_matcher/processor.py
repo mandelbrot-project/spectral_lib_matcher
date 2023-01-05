@@ -45,7 +45,7 @@ def minimal_process_query(spectra):
 
 
 def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_tolerance=0.01, min_score=0.2, min_peaks=6,
-            similarity_method="ModifiedCosine"):
+            similarity_method="ModifiedCosine", index=False):
     newMethods = ["Spec2Vec", "MS2DeepScore"]
     similarity_score = PrecursorMzMatch(tolerance=parent_mz_tolerance, tolerance_type="Dalton")
     scores = calculate_scores(spectra_query, spectra_db, similarity_score)
@@ -75,14 +75,21 @@ def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_toleran
             cosine_score, n_matches = ModifiedCosine(tolerance=msms_mz_tolerance).pair(spectra_query[x], spectra_db[y])[
                 ()]
         if (msms_score > min_score) & (n_matches > min_peaks):
-            data.append({'msms_score': msms_score,
-                         'matched_peaks': n_matches,
-                         # Get the feature_id or generate one
-                         'feature_id': spectra_query[x].get("scans") or x + 1,
-                         'short_inchikey': spectra_db[y].get("compound_name"),
-                         'smiles': spectra_db[y].get("smiles"),
-                         'molecular_formula': spectra_db[y].get("molecular_formula"),
-                         'exact_mass': spectra_db[y].get("parent_mass")
-                         })
+            if index:
+                data.append({'msms_score': msms_score,
+                             'matched_peaks': n_matches,
+                             'feature_id': spectra_query[x].get("feature_id") or x + 1,
+                             'target_id': spectra_db[y].get("feature_id") or y + 1
+                             })
+            else:
+                data.append({'msms_score': msms_score,
+                             'matched_peaks': n_matches,
+                              # Get the feature_id or generate one
+                             'feature_id': spectra_query[x].get("feature_id") or x + 1,
+                             'short_inchikey': spectra_db[y].get("compound_name"),
+                             'smiles': spectra_db[y].get("smiles"),
+                             'molecular_formula': spectra_db[y].get("molecular_formula"),
+                             'exact_mass': spectra_db[y].get("parent_mass")
+                             })
 
     return pd.DataFrame(data)
