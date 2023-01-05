@@ -5,11 +5,11 @@ channels:
   - defaults
 dependencies:
   - numpy
-  - matchms
+  - matchms >= 0.18.0
   - pandas
   - pip
   - pip:
-      - ms2deepscore >= 0.2.3
+      - ms2deepscore >= 0.3.0
       - pytest
       - pytest-runner
       - spec2vec >= 0.6.0
