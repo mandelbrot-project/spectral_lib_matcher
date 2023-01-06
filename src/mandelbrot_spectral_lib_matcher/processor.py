@@ -48,8 +48,8 @@ def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_toleran
             similarity_method="ModifiedCosine", index=False):
     newMethods = ["Spec2Vec", "MS2DeepScore"]
     similarity_score = PrecursorMzMatch(tolerance=parent_mz_tolerance, tolerance_type="Dalton")
-    scores = calculate_scores(spectra_query, spectra_db, similarity_score)
-    indices = np.where(np.asarray(scores.scores))
+    scores = calculate_scores(references=spectra_query, queries=spectra_db, array_type="numpy",is_symmetric=False, similarity_function=similarity_score)
+    indices = np.where(np.asarray(scores.scores.to_array()))
     idx_row, idx_col = indices
     spectral_similarity = eval(similarity_method)
     method_name = spectral_similarity.__name__

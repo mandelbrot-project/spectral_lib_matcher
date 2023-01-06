@@ -67,8 +67,10 @@ setup(
     ],
     python_requires='>=3.7.*',
     install_requires=[
-        'matchms>= 0.16.0',
-        'ms2deepscore >= 0.2.3',
+        'gensim',
+        'h5py',
+        'matchms>= 0.18.0',
+        'ms2deepscore >= 0.3.0',
         'numpy',
         'pandas',
         'spec2vec>= 0.6.0'
