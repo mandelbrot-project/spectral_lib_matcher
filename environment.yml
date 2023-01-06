@@ -16,5 +16,5 @@ dependencies:
       - pytest-runner
       - spec2vec >= 0.6.0
       - tqdm
-  - python >=3.7.*
+  - python >=3.7, <=3.11
   - requests
