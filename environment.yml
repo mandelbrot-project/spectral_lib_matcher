@@ -4,6 +4,8 @@ channels:
   - bioconda
   - defaults
 dependencies:
+  - gensim
+  - h5py
   - numpy
   - matchms >= 0.18.0
   - pandas
