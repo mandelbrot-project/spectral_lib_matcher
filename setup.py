@@ -82,7 +82,7 @@ setup(
         #   ':python_version=="2.6"': ['argparse'],
     },
     setup_requires=[
-        'pytest-runner',
+        'pytest'
     ],
     # entry_points={
     #    'console_scripts': [
