@@ -1,11 +1,14 @@
-FROM continuumio/miniconda3
+FROM python:3
+    
+WORKDIR /usr/src/app
 
-WORKDIR /app
+COPY setup.py /app
 
-RUN mkdir -p /app
-COPY environment.yml /app
-RUN conda update -n base -c defaults conda && conda env create -f environment.yml
-RUN echo "conda activate spectral_lib_matcher" >> ~/.bashrc
-COPY . /app
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install . --no-cache-dir 
+    
+COPY . .
+
 SHELL ["/bin/bash", "--login", "-c"]
+
 RUN ./scripts/run_tests.sh
