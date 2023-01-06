@@ -4,8 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
-RUN pip install . --no-cache-dir 
-    
-COPY . .
+RUN pip install -e . --no-cache-dir 
+RUN python -m pytest
 
-RUN ./scripts/run_tests.sh
+COPY . .
