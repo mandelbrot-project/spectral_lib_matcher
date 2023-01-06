@@ -65,7 +65,7 @@ setup(
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.7, <3.11',
     install_requires=[
         'gensim',
         'h5py',
