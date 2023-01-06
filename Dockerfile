@@ -2,7 +2,7 @@ FROM python:3
     
 WORKDIR /usr/src/app
 
-COPY setup.py /app
+COPY setup.py /usr/src/app
 
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install . --no-cache-dir 
