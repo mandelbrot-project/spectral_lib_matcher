@@ -73,7 +73,7 @@ setup(
         'ms2deepscore >= 0.3.0',
         'numpy',
         'pandas',
-        'spec2vec>= 0.6.0'
+        'spec2vec>= 0.7.0'
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require={
