@@ -18,6 +18,7 @@ DEFAULT_MSMS_SIMILARITY = "ModifiedCosine"
 class ProcessorConfig:
     query_file = None
     db_files = None
+    filter_ms1 = False
     gnps_job = False
     index = False
     output_file = None
@@ -57,6 +58,13 @@ def processor(log, config):
     else:
         query = list(load_from_mgf(config.query_file[0]))
 
+    if config.filter_ms1:
+        query_filtered = [] 
+        for spectrum in query:
+            if int(spectrum.metadata['mslevel']) == 2:
+                query_filtered.append(spectrum)
+        query = query_filtered
+
     log('%s spectra found in the query file.' % len(query))
     log("Loading DB files")
     database = []
@@ -81,6 +89,13 @@ def processor(log, config):
                 database += new_db
             else:
                 database += output
+            
+            if config.filter_ms1:
+                database_filtered = [] 
+                for spectrum in database:
+                    if int(spectrum.metadata['mslevel']) == 2:
+                        database_filtered.append(spectrum)
+                database = database_filtered
     # database = sum([list(load_from_mgf(i)) for i in args.db_files], [])
 
     log("Cleaning query")
@@ -112,6 +127,8 @@ if __name__ == '__main__':
                         help="the source MGF file or GNPS job ID (if -g == True)")
     parser.add_argument("db_files", metavar='database.mgf', type=str, nargs='+',
                         help="the database(s) MGF or binary format")
+    parser.add_argument("--filter_ms1", "-f", metavar='-f', type=bool, nargs=1,
+                        help="If your file(s) contain MS1, filter it out. Header has to be MSLEVEL")
     parser.add_argument("-g", action='store_true',
                         help="specifies that GNPS is the source of the query_file")
     parser.add_argument("-o", metavar='file.out', type=str, default=sys.stdout,
@@ -143,6 +160,7 @@ if __name__ == '__main__':
     config = ProcessorConfig()
     config.query_file = args.query_file
     config.db_files = args.db_files
+    config.filter_ms1 = args.filter_ms1
     config.gnps_job = args.g
     config.index = args.index
     config.output_file = args.o
