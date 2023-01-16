@@ -78,14 +78,14 @@ def process(spectra_query, spectra_db, parent_mz_tolerance=0.01, msms_mz_toleran
             if index:
                 data.append({'msms_score': msms_score,
                              'matched_peaks': n_matches,
-                             'matched_ratio' : n_matches / min(len(spectra_query[x].peaks.intensities), len(spectra_db[y].peaks.intensities)),
+                             'matched_ratio' : n_matches / max(len(spectra_query[x].peaks.intensities), len(spectra_db[y].peaks.intensities)),
                              'feature_id': spectra_query[x].get("feature_id") or x + 1,
                              'target_id': spectra_db[y].get("feature_id") or y + 1
                              })
             else:
                 data.append({'msms_score': msms_score,
                              'matched_peaks': n_matches,
-                             'matched_ratio' : n_matches / min(len(spectra_query[x].peaks.intensities), len(spectra_db[y].peaks.intensities)),
+                             'matched_ratio' : n_matches / max(len(spectra_query[x].peaks.intensities), len(spectra_db[y].peaks.intensities)),
                               # Get the feature_id or generate one
                              'feature_id': spectra_query[x].get("feature_id") or x + 1,
                              'short_inchikey': spectra_db[y].get("compound_name"),
