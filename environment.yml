@@ -14,7 +14,7 @@ dependencies:
       - ms2deepscore >= 0.3.0
       - pytest
       - pytest-runner
-      - spec2vec >= 0.7.0
+      - spec2vec >= 0.8.0
       - tqdm
   - python >=3.7, <3.11
   - requests
