@@ -70,7 +70,7 @@ setup(
         'gensim',
         'h5py',
         'matchms>= 0.18.0',
-        'ms2deepscore >= 0.3.0',
+        'ms2deepscore >= 0.3.1',
         'numpy',
         'pandas',
         'spec2vec>= 0.8.0'

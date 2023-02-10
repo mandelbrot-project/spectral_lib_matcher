@@ -11,7 +11,7 @@ dependencies:
   - pandas
   - pip
   - pip:
-      - ms2deepscore >= 0.3.0
+      - ms2deepscore >= 0.3.1
       - pytest
       - pytest-runner
       - spec2vec >= 0.8.0
