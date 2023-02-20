@@ -59,7 +59,7 @@ optional arguments:
 * --min_score [-s], -s [-s]
   * minimal score to consider (default 0.2)
 * --similarity_method [-z], -z [-z]
-  * similarity method used to perform spectral matching (default ModifiedCosine)
+  * similarity method used to perform spectral matching (default ModifiedCosine (the list of available similarity methods is listed at <https://matchms.readthedocs.io/en/latest/api/matchms.similarity.html#submodules>))
 * --min_peaks [-k], -k [-k]
   * minimal number of peaks to consider (default 6)
 * -c additional cleaning step on the database file
