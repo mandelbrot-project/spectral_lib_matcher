@@ -30,4 +30,4 @@ class TestBinaryDatabase:
 
     def test_cosine(self):
         df = process(self.query, self.database, 0.01, 0.01, 0.2, 6)
-        assert abs(df.iloc[0, :].msms_score - 0.738847) <= 0.000001
+        assert abs(df.iloc[0, :].score - 0.738847) <= 0.000001
