@@ -1,6 +1,7 @@
-import requests
 import sys
 import time
+
+import requests
 from matchms.importing import load_from_mgf
 
 # These numbers are only in effect when running the program as a script
@@ -59,7 +60,7 @@ def processor(log, config):
         query = list(load_from_mgf(config.query_file[0]))
 
     if config.filter_ms1:
-        query_filtered = [] 
+        query_filtered = []
         for spectrum in query:
             if int(spectrum.metadata['mslevel']) == 2:
                 query_filtered.append(spectrum)
@@ -89,9 +90,9 @@ def processor(log, config):
                 database += new_db
             else:
                 database += output
-            
+
             if config.filter_ms1:
-                database_filtered = [] 
+                database_filtered = []
                 for spectrum in database:
                     if int(spectrum.metadata['mslevel']) == 2:
                         database_filtered.append(spectrum)

@@ -1,11 +1,11 @@
 import glob
 import os
-import pandas as pd
 import sys
-from matchms.exporting import save_as_mgf
-from matchms.importing import load_from_mgf
 from time import sleep
 
+import pandas as pd
+from matchms.exporting import save_as_mgf
+from matchms.importing import load_from_mgf
 
 sample_dir = "C:/Users/gaudrya.FARMA/Desktop/VGF_individual_files_pos/"
 
