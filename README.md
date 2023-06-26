@@ -1,6 +1,7 @@
 # Spectral library matcher
 
-A script based on the [matchms](https://github.com/matchms/matchms) library allowing to calculate spectral similarity measures between two mgf (usually a query file and a library file). 
+A script based on the [matchms](https://github.com/matchms/matchms) library allowing to calculate spectral similarity
+measures between two mgf (usually a query file and a library file).
 A library of natural products in silico generated spectra is availabe here: <https://doi.org/10.5281/zenodo.5607185>
 
 ## Requirements
@@ -53,15 +54,16 @@ optional arguments:
 * -g specifies that GNPS is the source of the query_file
 * -o file.out output file
 * --parent_mz_tolerance [-p], -p [-p]
-  * tolerance for the parent ion (MS) (default 0.01)
+    * tolerance for the parent ion (MS) (default 0.01)
 * --msms_mz_tolerance [-m], -m [-m]
-  * tolerance for the MS/MS ions (default 0.01)
+    * tolerance for the MS/MS ions (default 0.01)
 * --min_score [-s], -s [-s]
-  * minimal score to consider (default 0.2)
+    * minimal score to consider (default 0.2)
 * --similarity_method [-z], -z [-z]
-  * similarity method used to perform spectral matching (default ModifiedCosine (the list of available similarity methods is listed at <https://matchms.readthedocs.io/en/latest/api/matchms.similarity.html#submodules>))
+    * similarity method used to perform spectral matching (default ModifiedCosine (the list of available similarity
+      methods is listed at <https://matchms.readthedocs.io/en/latest/api/matchms.similarity.html#submodules>))
 * --min_peaks [-k], -k [-k]
-  * minimal number of peaks to consider (default 6)
+    * minimal number of peaks to consider (default 6)
 * -c additional cleaning step on the database file
 * -v print additional details to stdout
 
@@ -77,7 +79,8 @@ Using the -g argument you can alternatively use a GNPS job id for a direct downl
 python src/processor.py -v -g -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine d7a9cacf9ccd4510a04d119ab1561ea5 data/spectral_lib.mdbl 
 ```
 
-If you want to compare two MGF's without structural annotation, use the `--index true` argument to match indices (feature_id's) instead.
+If you want to compare two MGF's without structural annotation, use the `--index true` argument to match indices (
+feature_id's) instead.
 
 ```shell
 python src/processor.py -v -g -o data/annotations.tsv -p 0.01 -m 0.01 -s 0.2 -k 6 -z ModifiedCosine data/query.mgf data/spectral_lib.mgf -i true
