@@ -70,8 +70,8 @@ setup(
     install_requires=[
         'gensim',
         'h5py',
-        'matchms>= 0.21.2',
-        'ms2deepscore >= 0.4.0',
+        'matchms>= 0.22.0',
+        'ms2deepscore >= 0.5.0',
         'numpy',
         'pandas',
         'spec2vec>= 0.8.0'

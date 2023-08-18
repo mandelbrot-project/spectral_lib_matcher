@@ -7,11 +7,11 @@ dependencies:
   - gensim
   - h5py
   - numpy
-  - matchms >= 0.21.2
+  - matchms >= 0.22.0
   - pandas
   - pip
   - pip:
-      - ms2deepscore >= 0.4.0
+      - ms2deepscore >= 0.5.0
       - pytest
       - pytest-runner
       - spec2vec >= 0.8.0
