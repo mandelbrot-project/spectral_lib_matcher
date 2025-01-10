@@ -1,17 +1,41 @@
-name: Build docker image and run tests in it
+name: Tests
 
 on:
-  push
+  pull_request:
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ 'ubuntu-latest' ]
+  tests:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build image
-        run: docker build -t spectrallibmatcher .
-      - name: Run tests
-        run: docker run -v $PWD:/app --rm spectrallibmatcher bash --login ./scripts/run_tests.sh
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Run tests for PR
+        run: |
+          uv run pytest --cov-config=.coveragerc --cov=.
+          uv run coverage xml
+
+#      - name: Get Cover
+#        if: github.event_name == 'pull_request'
+#        uses: orgoro/coverage@v3.2
+#        with:
+#          coverageFile: coverage.xml
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          thresholdAll: 0.98
+#
+#      - name: Run coverage report
+#        if: github.event_name != 'pull_request'
+#        run: uv run coverage report
