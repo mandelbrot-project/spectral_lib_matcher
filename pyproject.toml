@@ -1,0 +1,80 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "spectral_lib_matcher"
+version = "0.1.1"
+description = "Spectral Lib Matcher"
+authors = [
+    {name = "The Mandelbrot Contributors", email = "notyet@notyet.com'"},
+]
+requires-python = "<3.12.0,>=3.11.0"
+keywords = [
+    "SpectralMatching",
+]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Framework :: Pytest",
+    "Framework :: tox",
+    "Framework :: Sphinx",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+]
+license = {text = "LICENSE"}
+readme = "README.md"
+
+
+dependencies = [
+    "gensim<5.0.0,>=4.3.3",
+    "h5py<4.0.0,>=3.12.1",
+    "matchms<1.0.0,>=0.27.0",
+    "ms2deepscore<3.0.0,>=2.5.0",
+    "numpy<2.0.0,>=1.26.4",
+    "pandas<3.0.0,>=2.2.3",
+    "requests<3.0.0,>=2.32.3",
+    "spec2vec<1.0.0,>=0.8.0",
+    "tqdm<5.0.0,>=4.67.1",
+]
+
+[dependency-groups]
+dev = [
+    "black<25.0.0,>=24.10.0",
+    "coverage<8.0.0,>=7.6.10",
+    "isort<6.0.0,>=5.13.2",
+    "pytest<9.0.0,>=8.3.4",
+    "pytest-runner<7.0.0,>=6.0.1",
+    "tox<5.0.0,>=4.23.2",
+]
+
+[options.packages.find]
+where = "src"
+
+[options.package_data]
+spectral_lib_matcher = "data/.*"
+
+[project.urls]
+homepage = "https://github.com/mandelbrot-project/spectral_lib_matcher"
+repository = "https://github.com/mandelbrot-project/spectral_lib_matcher"
+documentation = "https://github.com/mandelbrot-project/spectral_lib_matcher"
+
+[tool.pdm.build]
+includes = ["*.py"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning:matchms.*:"
+]
+pythonpath = [
+  ".", "src",
+]
+testpaths = "tests"
+
+[tool.isort]
+profile = "black"

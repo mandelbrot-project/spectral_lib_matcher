@@ -6,6 +6,19 @@ A library of natural products in silico generated spectra is availabe here: <htt
 
 ## Requirements
 
+### With uv
+
+```shell
+uv sync
+uv venv
+```
+
+and activate it
+
+```shell
+source .venv/bin/activate
+```
+
 ### With conda
 
 You can create a conda environment with environment.yml.
@@ -20,7 +33,7 @@ and activate it
 conda activate spectral_lib_matcher
 ```
 
-### With docker.
+### With docker
 
 ```shell
 docker build -t spectrallibmatcher .

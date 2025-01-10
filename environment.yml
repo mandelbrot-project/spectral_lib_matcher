@@ -4,17 +4,17 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - gensim
-  - h5py
-  - numpy
-  - matchms >= 0.22.0
-  - pandas
+  - gensim >= 4.3.3
+  - h5py >= 3.12.1
+  - numpy >=1.26.4
+  - matchms >= 0.27.0
+  - pandas >=2.2.3
   - pip
   - pip:
-      - ms2deepscore >= 0.5.0
-      - pytest
-      - pytest-runner
+      - ms2deepscore >= 2.5.0
+      - pytest >=8.3.4
+      - pytest-runner >=6.0.1
       - spec2vec >= 0.8.0
-      - tqdm
-  - python >=3.10
-  - requests
+      - tqdm >=4.67.1
+  - python >=3.11
+  - requests >=2.32.3
