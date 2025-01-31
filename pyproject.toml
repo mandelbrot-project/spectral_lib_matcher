@@ -44,12 +44,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "black<25.0.0,>=24.10.0",
+    "black<26.0.0,>=25.1.0",
     "coverage<8.0.0,>=7.6.10",
-    "isort<6.0.0,>=5.13.2",
+    "isort<7.0.0,>=6.0.0",
     "pytest<9.0.0,>=8.3.4",
     "pytest-runner<7.0.0,>=6.0.1",
-    "tox<5.0.0,>=4.23.2",
+    "tox<5.0.0,>=4.24.1",
 ]
 
 [options.packages.find]
